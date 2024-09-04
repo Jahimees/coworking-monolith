@@ -1,0 +1,92 @@
+@font-face {
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'codropsicons';
+    src:url('../fonts/codropsicons/codropsicons.eot');
+    src:url('../fonts/codropsicons/codropsicons.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/codropsicons/codropsicons.woff') format('woff'),
+    url('../fonts/codropsicons/codropsicons.ttf') format('truetype'),
+    url('../fonts/codropsicons/codropsicons.svg#codropsicons') format('svg');
+}
+
+*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+.clearfix:before, .clearfix:after { content: ''; display: table; }
+.clearfix:after { clear: both; }
+
+/* Header */
+.large-header {
+    position: relative;
+    width: 100%;
+    background:
+            linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.0)),
+            url(images/header-back.jpg);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+    z-index: 1;
+
+    font-family: 'Raleway', Calibri, Arial, sans-serif;
+    font-weight: 400;
+    color: #383a3c;
+    font-size: 1em;
+    line-height: 1.25;
+}
+
+.header-btn {
+    margin-left: 20px;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+    -webkit-transition: color 0.3s;
+}
+
+.header-btn:hover {
+    color: #93bff3;
+}
+
+.demo-1 .large-header {
+    background-image: url('images/header-back.jpg');
+}
+
+.right-header-block {
+    position: absolute;
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+    color: #f9f1e9;
+    text-align: center;
+    top: 10%;
+    right: 0;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.center-header-block {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    color: #f9f1e9;
+    text-align: center;
+    top: 50%;
+    right: 50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.demo-1 .right-header-block {
+    text-transform: uppercase;
+    font-size: 4.2em;
+    letter-spacing: 0.1em;
+}
+
+.right-header-block .thin {
+    font-weight: 200;
+}
+
+@media only screen and (max-width: 768px) {
+    .demo-1 .right-header-block {
+        font-size: 3em;
+    }
+
+
+}
