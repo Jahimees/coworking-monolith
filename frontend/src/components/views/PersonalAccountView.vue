@@ -19,24 +19,6 @@ const isOfficeManagement = ref(false)
 
 var prevTarget = isSettings
 
-fetch("http://localhost:8080/api/v1/test",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      crossDomain: true
-    }
-)
-    .then(async (response) => {
-      console.log(response)
-    })
-    .then((responseJson) => {
-    })
-    .catch((error) => {
-    });
-
-
 onMounted(() => {
 
   const $menuBtn = $(".menu-btn");
@@ -84,7 +66,7 @@ onMounted(() => {
 
   <div class="inline-block">
     <div style="background-color: #EAFAFCFF; height: 100vh" id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_USER'">
-      <div><img src="@/assets/images/logo.png" class="block-center"></div>
+      <div><img src="@/assets/images/nauchsoft_logo.png" class="block-center"></div>
       <div>Текущий офис:</div>
       <a href="/" class="menu-btn">На главную</a>
       <a href="#" id="settings" class="menu-btn" :class="{select: isSettings}">Настройки</a>

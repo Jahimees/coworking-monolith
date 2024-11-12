@@ -17,6 +17,9 @@ public class UserDto implements DtoEntity {
      * !RAW password!
      */
     private String rawPassword;
+    private String firstName;
+    private String lastName;
+    private String middleName;
     private List<RoleDto> roles;
 
 }

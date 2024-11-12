@@ -65,10 +65,11 @@ function test() {
 </script>
 
 <template>
-  <a class="block-center m-t-3em" href="/"><img src="@/assets/images/logo.png"></a>
-  <div class="block-center">На главную</div>
-  <div class="w-100 p-tb-3em m-t-5em block-center">
-    <h1 class="block-center">GoCow Авторизация</h1>
+  <a class="block-center m-t-3em" href="/">
+    <img src="@/assets/images/nauchsoft_logo.png">
+  </a>
+  <div class="bg-image p-tb-3em m-t-5em block-center">
+    <h1 class="block-center">NAUCHSOFT Авторизация</h1>
     <div class="err-field" v-if="wrongCredsErr">Логин и (или) пароль неверные</div>
     <div class="block-center">
       <div class="lbl-field">Имя пользователя</div>
@@ -129,8 +130,11 @@ button:hover {
   color: white;
 }
 
-.w-100 {
-  background: linear-gradient(90deg, rgba(168, 162, 255, 0.6811099439775911) 0%, rgba(42, 42, 255, 0.4682247899159664) 49%, rgba(0, 212, 255, 0.5886729691876751) 100%);
+.bg-image {
+  background-image: url("@/assets/images/auth_back.jpg");
+  width: 60%;
+  border-radius: 25px;
+  opacity: 0.85;
 }
 
 h1 {
@@ -141,13 +145,14 @@ h1 {
 }
 
 img {
-  width: 100px;
+  width: 300px;
   cursor: pointer;
+  transition: all 0.5s;
 }
 
 img:hover {
-  transform: rotate(360deg);
-  transition: all 1s;
+  width: 350px;
+  transition: all 0.5s;
 }
 
 a.block-center:hover {

@@ -9,9 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -26,6 +24,9 @@ public class UserDtoConverter {
         userDto.setUsername(user.getUsername());
         userDto.setRawPassword(null);
         userDto.setEmail(user.getEmail());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setMiddleName(user.getMiddleName());
 
         List<RoleDto> roleDtoList = new ArrayList<>();
         user.getRoles().forEach(role -> roleDtoList.add(roleDtoConverter.convertToDto(role)));
@@ -40,8 +41,15 @@ public class UserDtoConverter {
 
         user.setId(userDto.getId());
         user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getRawPassword()));
+        if (userDto.getRawPassword() != null && !userDto.getRawPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDto.getRawPassword()));
+        } else {
+            user.setPassword(null);
+        }
         user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setMiddleName(userDto.getMiddleName());
 
         List<Role> roleList = new ArrayList<>();
         if (userDto.getRoles() != null) {
@@ -51,15 +59,5 @@ public class UserDtoConverter {
         }
 
         return user;
-    }
-
-    public Map<String, Object> convertEntityToMap(User user) {
-        Map<String, Object> params = new HashMap<>();
-
-        params.put("id", user.getId());
-        params.put("email", user.getEmail());
-        params.put("username", user.getUsername());
-
-        return params;
     }
 }

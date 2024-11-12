@@ -86,9 +86,8 @@ function clearErrors() {
 </script>
 
 <template>
-  <a class="block-center m-t-3em" href="/"><img src="@/assets/images/logo.png"></a>
-  <div class="block-center">На главную</div>
-  <form class="w-100 p-tb-3em m-t-3em block-center">
+  <a class="block-center m-t-3em" href="/"><img src="@/assets/images/nauchsoft_logo.png"></a>
+  <form class="bg-image p-tb-3em m-t-3em block-center">
     <h1 class="block-center">GoCow Регистрация</h1>
     <div class="err-field" v-if="isServiceUnavailable">Сервис недоступен, попробуйте позже</div>
     <div class="err-field" v-if="isFieldsEmptyErr">Все поля должны быть заполнены!</div>
@@ -166,8 +165,11 @@ button:hover {
   color: white;
 }
 
-.w-100 {
-  background: linear-gradient(90deg, rgba(168, 162, 255, 0.6811099439775911) 0%, rgba(42, 42, 255, 0.4682247899159664) 49%, rgba(0, 212, 255, 0.5886729691876751) 100%);
+.bg-image {
+  background-image: url("@/assets/images/auth_back.jpg");
+  width: 60%;
+  border-radius: 25px;
+  opacity: 0.85;
 }
 
 h1 {
@@ -178,13 +180,14 @@ h1 {
 }
 
 img {
-  width: 100px;
+  width: 300px;
+  transition: all 0.5s;
   cursor: pointer;
 }
 
 img:hover {
-  transform: rotate(360deg);
-  transition: all 1s;
+  width: 350px;
+  transition: all 0.5s;
 }
 
 a.block-center:hover {

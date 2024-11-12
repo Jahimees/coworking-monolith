@@ -20,11 +20,11 @@ function logout() {
   <header id="large-header" class="large-header">
     <canvas id="demo-canvas"></canvas>
     <div class="center-header-block">
-      <h1>GoCow</h1>
-      <div>Программное средство для бла бла бла бла бла</div>
+      <h1>NAUCHSOFT Office</h1>
+      <div>Управление офисным пространством</div>
     </div>
     <div id="logo">
-    <img src="@/assets/images/logo.png">
+    <img src="@/assets/images/nauchsoft_logo.png">
     </div>
 
     <div class="right-header-block" v-if="isAuthenticated">
@@ -61,11 +61,15 @@ function logout() {
  }
 
  img {
-   width: 30vh;
+   width: 40vh;
+   background-color: #ffffff;
+   padding: 1.5vh;
+   border-radius: 10px;
+   transition: 0.3s;
  }
 
  img:hover {
-   transform: rotate(-360deg);
-   transition: all 1s;
+   width: 45vh;
+   transition: 0.3s;
  }
 </style>

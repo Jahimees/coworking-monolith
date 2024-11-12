@@ -1,10 +1,7 @@
 package by.bsuir.antonovich.backend.service;
 
 import by.bsuir.antonovich.backend.data.User;
-import by.bsuir.antonovich.backend.exception.EmailAlreadyExistsException;
-import by.bsuir.antonovich.backend.exception.NotEnoughRegistrationData;
-import by.bsuir.antonovich.backend.exception.RoleNotFoundException;
-import by.bsuir.antonovich.backend.exception.UsernameAlreadyExistsException;
+import by.bsuir.antonovich.backend.exception.*;
 import by.bsuir.antonovich.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -50,7 +47,8 @@ public class UserService implements UserDetailsService {
                 new UsernameNotFoundException("User not found"));
     }
 
-    private Optional<User> findUserByUsername(String username) {
+    @Transactional
+    public Optional<User> findUserByUsername(String username) {
         return userRepository.getUserByUsername(username);
     }
 
@@ -66,6 +64,25 @@ public class UserService implements UserDetailsService {
         if (userOptional.isPresent()) {
             throw new EmailAlreadyExistsException("User with this email already exists");
         }
+    }
+
+    public User patchUser(String username, User newUser) throws UserNotFoundException {
+        Optional<User> oldUserOptional = findUserByUsername(username);
+
+        if (oldUserOptional.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        User oldUser = oldUserOptional.get();
+
+        oldUser.setEmail(newUser.getEmail() != null && !newUser.getEmail().isEmpty() ? newUser.getEmail() : oldUser.getEmail());
+        oldUser.setPassword(newUser.getPassword() != null && !newUser.getPassword().isEmpty() ? newUser.getPassword() : oldUser.getPassword());
+        oldUser.setUsername(newUser.getUsername() != null && !newUser.getUsername().isEmpty() ? newUser.getUsername() : oldUser.getUsername());
+        oldUser.setFirstName(newUser.getFirstName() != null && !newUser.getFirstName().isEmpty() ? newUser.getFirstName() : oldUser.getFirstName());
+        oldUser.setLastName(newUser.getLastName() != null && !newUser.getLastName().isEmpty() ? newUser.getLastName() : oldUser.getLastName());
+        oldUser.setMiddleName(newUser.getMiddleName() != null && newUser.getMiddleName().isEmpty() ? newUser.getMiddleName() : oldUser.getMiddleName());
+
+         return userRepository.saveAndFlush(oldUser);
     }
 
 }
