@@ -6,6 +6,7 @@
 
 .inline-block {
     display: inline-flex;
+    width: 100%;
 }
 
 .m-b-3em {

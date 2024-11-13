@@ -3,6 +3,7 @@ import './assets/common.css'
 import './assets/header.css'
 import './assets/normalize.css'
 import './assets/base.css'
+import './assets/account.css'
 
 import './scripts/TweenLite.min.js'
 import './scripts/EasePack.min.js'

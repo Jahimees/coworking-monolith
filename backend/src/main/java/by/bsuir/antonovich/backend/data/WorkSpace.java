@@ -20,4 +20,7 @@ public class WorkSpace implements SimpleEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

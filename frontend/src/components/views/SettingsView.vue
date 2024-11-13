@@ -15,7 +15,6 @@ const isUsernameEmpty = ref(false)
 const isEmailEmpty = ref(false)
 
 onMounted(() => {
-  // /api/v1/users/${username}
   console.log(props.parsedToken.sub)
 
   fetch("http://localhost:8080/api/v1/users/" + props.parsedToken.sub,
@@ -74,6 +73,7 @@ function patchUser() {
     crossDomain: true
   }).then(async (response) => {
     if (response.ok) {
+      alert("Изменения прошли успешно")
       return response.json();
     }
 
@@ -100,8 +100,12 @@ function getBody() {
 </script>
 
 <template>
+  <div class="view-header">
+    НАСТРОЙКИ
+  </div>
+  {{ props.parsedToken }}
+
   <div class="inline-block">
-    {{ props.parsedToken }}
     <div class="setting-block">
       <div class="setting-title">Главные настройки</div>
       <div>
@@ -137,49 +141,55 @@ function getBody() {
         <input id="middlename-input" v-model="middleNameValue">
       </div>
 
-      <button @click="patchUser">Сохранить</button>
 
     </div>
+
   </div>
+  <div class="btn-container">
+
+    <button @click="patchUser">Сохранить</button>
+  </div>
+
 </template>
 
 <style scoped>
 label {
-  font-family: 'codropsicons';
+  //font-family: 'codropsicons';
   font-size: 1.3em;
-  margin: 0 1vh 0 0;
+  margin: 1vh 0 0 0;
+  text-align: left;
 }
 
 .setting-title {
-  font-family: 'codropsicons';
   font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
 }
 
 .setting-block {
-  margin: 2vh 0;
-  margin: 10vh;
+  margin: 2vh 0 1vh 1.5vh;
+  padding: 2vh 5vh 3vh 5vh;
+  border-radius: 10px;
+  background-color: #dbeaff;
 }
 
 input {
   display: block;
 }
 
-button {
-  font-size: 2em;
-  font-family: 'codropsicons';
-  margin-top: 0.5em;
-  border-radius: 0.3em;
-  padding: 0.4em 0.5em;
-}
-
-button:hover {
-  background-color: hsl(243, 94%, 87%);
-  color: white;
-}
-
 .err-field {
-  font-family: 'codropsicons';
   color: #a10000;
   font-size: 1em;
+}
+
+button {
+  margin: 0.5em auto 0 auto;
+  display: block;
+}
+
+.btn-container {
+  margin: 0 1.5vh;
+  bottom: 5%;
+  position: fixed;
 }
 </style>

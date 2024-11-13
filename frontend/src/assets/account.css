@@ -1,0 +1,13 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab|PT+Sans+Caption&subset=latin,cyrillic);
+
+.view-header {
+    height: 2em;
+    background-color: #3389DFFF;
+    border-bottom-right-radius: 15px;
+    text-align: center;
+    font-family: 'Lucida Sans Unicode', monospace;
+    color: white;
+    font-size: 3em;
+    padding-top: 0.2em;
+    margin-bottom: 0.5em;
+}

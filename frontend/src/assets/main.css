@@ -1,4 +1,5 @@
 @import './base.css';
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab|PT+Sans+Caption&subset=latin,cyrillic);
 
 a, .green {
   text-decoration: none;

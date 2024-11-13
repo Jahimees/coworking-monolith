@@ -22,13 +22,13 @@ public class Office implements SimpleEntity {
     private String address;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User userOwner;
 
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "users",
+            name = "offices_owners",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "office_id", referencedColumnName = "id")
     )

@@ -65,9 +65,9 @@ onMounted(() => {
 <template>
 
   <div class="inline-block">
-    <div style="background-color: #EAFAFCFF; height: 100vh" id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_USER'">
+    <div style="background-color: #3389DFFF; height: 100vh" id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_USER'">
       <div><img src="@/assets/images/nauchsoft_logo.png" class="block-center"></div>
-      <div>Текущий офис:</div>
+      <div style="font-family: 'codropsicons'">Текущий офис:</div>
       <a href="/" class="menu-btn">На главную</a>
       <a href="#" id="settings" class="menu-btn" :class="{select: isSettings}">Настройки</a>
       <a href="#" id="currentOffice" class="menu-btn">Текущий офис</a>
@@ -88,28 +88,35 @@ onMounted(() => {
 <style scoped>
 
 img {
-  width: 20vh;
-  margin-top: 1em;
+  width: 25vh;
+  margin-top: 3vh;
+  background-color: rgba(198, 223, 255, 0.6);
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .menu-btn {
-  font-family: 'codropsicons';
+  //font-family: 'codropsicons';
   font-size: 1.5em;
-  background-color: #eafafc;
-  padding: 10px 0;
+  background-color: #7ab2e7;
+  padding: 5px 0;
   width: 275px;
   text-align: center;
   cursor: pointer;
   text-decoration: none;
-  color: black;
+  color: rgb(36, 114, 189);
+  margin: 5px 10px;
+  font-weight: bold;
 }
 
 .menu-btn:hover {
-  background-color: #bddeff;
+  background-color: #3082bf;
+  color: white;
 }
 
 .menu-btn.select {
-  background-color: #acdbff;
+  background-color: #3082bf;
+  color: white;
 }
 
 a {

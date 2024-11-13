@@ -84,3 +84,32 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+input {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #F0F8FFFF;
+  outline-color: #2c3e50;
+}
+
+input:focus {
+  background-color: #e3f2f3
+}
+
+button {
+  font-size: 1.5em;
+  font-family: 'codropsicons';
+  margin-top: 0.3em;
+  border-radius: 0.3em;
+  padding: 0.4em 0.5em;
+  background-color: #93bff3;
+  color: white;
+  outline: none;
+  border: none;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #3379cc;
+  transition: 0.3s;
+}

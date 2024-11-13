@@ -125,11 +125,6 @@ button {
   padding: 0.4em 0.5em;
 }
 
-button:hover {
-  background-color: hsl(243, 94%, 87%);
-  color: white;
-}
-
 .bg-image {
   background-image: url("@/assets/images/auth_back.jpg");
   width: 60%;
