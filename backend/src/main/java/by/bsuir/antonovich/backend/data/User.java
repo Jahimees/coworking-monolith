@@ -1,6 +1,18 @@
 package by.bsuir.antonovich.backend.data;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +48,10 @@ public class User implements UserDetails, SimpleEntity {
     @Column(name = "middle_name")
     private String middleName;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
     @ManyToMany
     @JoinTable(
             name = "users_roles",
@@ -50,6 +66,7 @@ public class User implements UserDetails, SimpleEntity {
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "workspace_id")
     private WorkSpace workSpace;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

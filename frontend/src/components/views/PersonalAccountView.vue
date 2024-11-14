@@ -2,9 +2,9 @@
 import Utils from "@/scripts/Utils.js";
 import {onMounted, ref} from "vue";
 import SettingsView from "@/components/views/SettingsView.vue";
-import CurrentOffice from "@/components/views/CurrentOffice.vue";
-import OfficePeople from "@/components/views/OfficePeople.vue";
+import DepartmentManagement from "@/components/views/DepartmentManagement.vue";
 import OfficeManagement from "@/components/views/OfficeManagement.vue";
+import ManagePeople from "@/components/views/PeopleManagement.vue";
 
 //account check fetch
 Utils.redirectToAuthIfNotAuthorized()
@@ -13,8 +13,8 @@ const token = ref(Utils.getCookie('_at'))
 const parsedToken = ref(Utils.parseJwt(token.value))
 
 const isSettings = ref(true)
-const isCurrentOffice = ref(false)
-const isOfficePeople = ref(false)
+const isPeopleManagement = ref(false)
+const isDepartmentManagement = ref(false)
 const isOfficeManagement = ref(false)
 
 var prevTarget = isSettings
@@ -36,16 +36,16 @@ onMounted(() => {
         prevTarget = isSettings
         break
       }
-      case "currentOffice": {
+      case "peopleManagement": {
         prevTarget.value = false
-        isCurrentOffice.value = true
-        prevTarget = isCurrentOffice
+        isPeopleManagement.value = true
+        prevTarget = isPeopleManagement
         break
       }
-      case "officePeople": {
+      case "departmentManagement": {
         prevTarget.value = false
-        isOfficePeople.value = true
-        prevTarget = isOfficePeople
+        isDepartmentManagement.value = true
+        prevTarget = isDepartmentManagement
         break
       }
       case "officeManagement": {
@@ -70,16 +70,16 @@ onMounted(() => {
       <div style="font-family: 'codropsicons'">Текущий офис:</div>
       <a href="/" class="menu-btn">На главную</a>
       <a href="#" id="settings" class="menu-btn" :class="{select: isSettings}">Настройки</a>
-      <a href="#" id="currentOffice" class="menu-btn">Текущий офис</a>
-      <a href="#" id="officePeople" class="menu-btn">Люди в офисе</a>
+      <a href="#" id="peopleManagement" class="menu-btn">Управление сотрудниками</a>
+      <a href="#" id="departmentManagement" class="menu-btn">Управление отделами</a>
       <a href="#" id="officeManagement" class="menu-btn">Управление офисами</a>
       <a href="" @click="Utils.logout()" class="menu-btn">Выйти из аккаунта</a>
     </div>
     <div class="w-100">
-      <SettingsView v-model:parsed-token="parsedToken" v-if="isSettings" />
-      <CurrentOffice v-if="isCurrentOffice"/>
-      <OfficePeople v-if="isOfficePeople" />
-      <OfficeManagement v-if="isOfficeManagement" />
+      <SettingsView v-model:parsed-token="parsedToken" v-if="isSettings"/>
+      <ManagePeople v-if="isPeopleManagement"/>
+      <DepartmentManagement v-if="isDepartmentManagement"/>
+      <OfficeManagement v-if="isOfficeManagement"/>
     </div>
   </div>
 
@@ -96,17 +96,14 @@ img {
 }
 
 .menu-btn {
-  //font-family: 'codropsicons';
-  font-size: 1.5em;
-  background-color: #7ab2e7;
-  padding: 5px 0;
-  width: 275px;
-  text-align: center;
+  font-size: 1em;
+  text-align: left;
+  background-color: #5e9dd6;
+  padding: 5px 10px;
   cursor: pointer;
   text-decoration: none;
-  color: rgb(36, 114, 189);
+  color: #e3e3e3;
   margin: 5px 10px;
-  font-weight: bold;
 }
 
 .menu-btn:hover {

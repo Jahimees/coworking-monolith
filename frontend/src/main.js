@@ -4,10 +4,12 @@ import './assets/header.css'
 import './assets/normalize.css'
 import './assets/base.css'
 import './assets/account.css'
+import './assets/datatable-custom.css'
 
 import './scripts/TweenLite.min.js'
 import './scripts/EasePack.min.js'
 import "./scripts/Utils.js"
+import "./scripts/DataTableUtils.js"
 
 
 // import "http://html5shiv.googlecode.com/svn/trunk/html5.js"

@@ -1,0 +1,22 @@
+.dt-layout-cell > .dt-paging nav > button .disabled {
+    background-color: black !important;
+}
+
+.dt-paging nav button {
+    font-size: 1em;
+    font-family: none !important;
+    margin-top: 0.3em;
+    border-radius: 0.5em;
+    padding: 0.4em 0.5em;
+    background-color: #93bff3 !important;
+    color: white;
+    outline: none;
+    border: none;
+    transition: 0.3s;
+}
+
+nav button:hover {
+    background-color: #3379cc;
+    transition: 0.3s;
+}
+

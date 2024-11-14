@@ -101,7 +101,7 @@ function getBody() {
 
 <template>
   <div class="view-header">
-    НАСТРОЙКИ
+    Настройки
   </div>
   {{ props.parsedToken }}
 

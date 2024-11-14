@@ -1,10 +1,9 @@
 <script setup>
-
 </script>
 
 <template>
   <div class="view-header">
-    Управление офисами
+    Управление отделами
   </div>
 </template>
 
