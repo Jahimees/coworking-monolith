@@ -24,6 +24,10 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleService roleService;
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
     @Transactional
     public User create(User user) throws UsernameAlreadyExistsException, NotEnoughRegistrationData,
             EmailAlreadyExistsException, RoleNotFoundException {

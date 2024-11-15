@@ -1,48 +1,44 @@
 package by.bsuir.antonovich.backend.service.converter;
 
+import by.bsuir.antonovich.backend.data.Office;
 import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.User;
 import by.bsuir.antonovich.backend.data.dto.RoleDto;
 import by.bsuir.antonovich.backend.data.dto.UserDto;
-import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@AllArgsConstructor
 public class UserDtoConverter {
 
-    private final RoleDtoConverter roleDtoConverter;
-    private final PasswordEncoder passwordEncoder;
-
-    public UserDto convertToDto(User user) {
+    public static UserDto convertToDto(User user, Direction direction) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
-        userDto.setRawPassword(null);
+        userDto.setPassword(null);
         userDto.setEmail(user.getEmail());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setMiddleName(user.getMiddleName());
 
         List<RoleDto> roleDtoList = new ArrayList<>();
-        user.getRoles().forEach(role -> roleDtoList.add(roleDtoConverter.convertToDto(role)));
+        user.getRoles().forEach(role -> roleDtoList.add(RoleDtoConverter.convertToDto(role, direction)));
 
         userDto.setRoles(roleDtoList);
 
         return userDto;
     }
 
-    public User convertToEntity(UserDto userDto) {
+    public static User convertToEntity(UserDto userDto, Direction direction) {
         User user = new User();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         user.setId(userDto.getId());
         user.setUsername(userDto.getUsername());
-        if (userDto.getRawPassword() != null && !userDto.getRawPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDto.getRawPassword()));
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         } else {
             user.setPassword(null);
         }
@@ -51,9 +47,24 @@ public class UserDtoConverter {
         user.setLastName(userDto.getLastName());
         user.setMiddleName(userDto.getMiddleName());
 
+        if (userDto.getDepartment() != null) {
+            user.setDepartment(DepartmentDtoConverter.convertToEntity(userDto.getDepartment(), direction));
+        }
+
+        if (userDto.getWorkSpace() != null) {
+            user.setWorkSpace(WorkSpaceDtoConverter.convertToEntity(userDto.getWorkSpace(), direction));
+        }
+
+        List<Office> officeList = new ArrayList<>();
+        if (userDto.getOffices() != null && !userDto.getOffices().isEmpty()) {
+            userDto.getOffices().forEach(officeDto ->
+                    officeList.add(OfficeDtoConverter.convertToEntity(officeDto, direction)));
+            user.setOffices(officeList);
+        }
+
         List<Role> roleList = new ArrayList<>();
         if (userDto.getRoles() != null) {
-            userDto.getRoles().forEach(role -> roleList.add(roleDtoConverter.convertToEntity(role)));
+            userDto.getRoles().forEach(role -> roleList.add(RoleDtoConverter.convertToEntity(role, direction)));
 
             user.setRoles(roleList);
         }

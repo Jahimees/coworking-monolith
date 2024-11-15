@@ -2,32 +2,53 @@ package by.bsuir.antonovich.backend.service.dto;
 
 import by.bsuir.antonovich.backend.data.User;
 import by.bsuir.antonovich.backend.data.dto.UserDto;
-import by.bsuir.antonovich.backend.exception.*;
+import by.bsuir.antonovich.backend.exception.EmailAlreadyExistsException;
+import by.bsuir.antonovich.backend.exception.NotEnoughRegistrationData;
+import by.bsuir.antonovich.backend.exception.RoleNotFoundException;
+import by.bsuir.antonovich.backend.exception.UserNotFoundException;
+import by.bsuir.antonovich.backend.exception.UsernameAlreadyExistsException;
 import by.bsuir.antonovich.backend.service.UserService;
 import by.bsuir.antonovich.backend.service.converter.UserDtoConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
+import static by.bsuir.antonovich.backend.service.converter.Direction.DOWN;
 
 @Service
 @AllArgsConstructor
 public class UserDtoService {
 
     private final UserService userService;
-    private final UserDtoConverter userDtoConverter;
+
+    public List<UserDto> findAll() {
+        List<User> userList = userService.findAll();
+
+        if (userList == null || userList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<UserDto> userDtoList = new ArrayList<>();
+        userList.forEach(user -> userDtoList.add(UserDtoConverter.convertToDto(user, DOWN)));
+
+        return userDtoList;
+    }
 
     public UserDto create(UserDto userDto) throws UsernameAlreadyExistsException, NotEnoughRegistrationData,
             EmailAlreadyExistsException, RoleNotFoundException {
 
-        User user = userDtoConverter.convertToEntity(userDto);
+        User user = UserDtoConverter.convertToEntity(userDto, DOWN);
         User createdUser = userService.create(user);
 
-        return userDtoConverter.convertToDto(createdUser);
+        return UserDtoConverter.convertToDto(createdUser, DOWN);
     }
 
     public UserDto loadUserByUsername(String username) {
-        return userDtoConverter.convertToDto((User) userService.loadUserByUsername(username));
+        return UserDtoConverter.convertToDto((User) userService.loadUserByUsername(username), DOWN);
     }
 
     public UserDto findUserByUsername(String username) throws UserNotFoundException {
@@ -37,12 +58,12 @@ public class UserDtoService {
             throw new UserNotFoundException("User with username %s not found".formatted(username));
         }
 
-        return userDtoConverter.convertToDto(optionalUser.get());
+        return UserDtoConverter.convertToDto(optionalUser.get(), DOWN);
     }
 
     public UserDto patchUser(String username, UserDto userDto) throws UserNotFoundException {
-        User user = userDtoConverter.convertToEntity(userDto);
-        return userDtoConverter.convertToDto(userService.patchUser(username, user));
+        User user = UserDtoConverter.convertToEntity(userDto, DOWN);
+        return UserDtoConverter.convertToDto(userService.patchUser(username, user), DOWN);
     }
 
 }

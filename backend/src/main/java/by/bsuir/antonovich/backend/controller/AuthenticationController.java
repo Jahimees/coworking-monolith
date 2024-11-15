@@ -34,7 +34,7 @@ public class AuthenticationController {
 
         try {
             auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getRawPassword()));
+                    new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         } catch (BadCredentialsException e) {
             return ResponseEntity.badRequest().body("Имя пользователя или пароль неверные");
         }

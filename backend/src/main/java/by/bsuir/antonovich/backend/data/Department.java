@@ -6,14 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jdk.jfr.Name;
 import lombok.Data;
-import lombok.Generated;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "department")
-public class Department {
+@NoArgsConstructor
+public class Department implements SimpleEntity {
 
     @Id
     @Column(name = "id")

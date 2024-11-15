@@ -2,21 +2,29 @@
     background-color: black !important;
 }
 
+.dt-paging nav button.disabled {
+    background-color: #cce0fa !important;
+}
+
 .dt-paging nav button {
     font-size: 1em;
     font-family: none !important;
     margin-top: 0.3em;
     border-radius: 0.5em;
     padding: 0.4em 0.5em;
-    background-color: #93bff3 !important;
-    color: white;
+    background-color: #a1c9f8 !important;
+    color: white !important;
     outline: none;
     border: none;
     transition: 0.3s;
 }
 
 nav button:hover {
-    background-color: #3379cc;
+    background-color: #89c3f3 !important;
     transition: 0.3s;
+}
+
+nav button.disabled:hover {
+    background-color: #b0d2fa !important;
 }
 

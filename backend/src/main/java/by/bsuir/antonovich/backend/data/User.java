@@ -60,7 +60,7 @@ public class User implements UserDetails, SimpleEntity {
     )
     private List<Role> roles;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "userOwnerList")
     private List<Office> offices;
 
     @OneToOne(cascade = CascadeType.DETACH)

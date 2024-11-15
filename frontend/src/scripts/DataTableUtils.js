@@ -35,8 +35,8 @@ function initDataTable(tableId) {
             "paginate": {
                 "first": "Первая",
                 "last": "Последняя",
-                "next": "Следующая",
-                "previous": "Предыдущая"
+                "next": ">>",
+                "previous": "<<"
             },
             "aria": {
                 "sortAscending": ": активировать сортировку по возрастанию",

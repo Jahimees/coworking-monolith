@@ -2,14 +2,12 @@ package by.bsuir.antonovich.backend.service.converter;
 
 import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.dto.RoleDto;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@AllArgsConstructor
-public class RoleDtoConverter {
+public final class RoleDtoConverter {
 
-    public RoleDto convertToDto(Role role) {
+    private RoleDtoConverter() {}
+
+    public static RoleDto convertToDto(Role role, Direction direction) {
         RoleDto roleDto = new RoleDto();
 
         roleDto.setId(role.getId());
@@ -18,7 +16,7 @@ public class RoleDtoConverter {
         return roleDto;
     }
 
-    public Role convertToEntity(RoleDto roleDto) {
+    public static Role convertToEntity(RoleDto roleDto, Direction direction) {
         Role role = new Role();
 
         roleDto.setId(roleDto.getId());

@@ -11,6 +11,7 @@
   <div class="view-header">
     Управление сотрудниками
   </div>
+  <div class="data-table-container">
   <table id="default_table" class="display">
     <thead>
     <tr>
@@ -29,8 +30,15 @@
     </tr>
     </tbody>
   </table>
+  </div>
 </template>
 
 <style scoped>
-
+.data-table-container {
+  margin: 0 auto;
+  width: 95%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #b1c5d8;
+}
 </style>

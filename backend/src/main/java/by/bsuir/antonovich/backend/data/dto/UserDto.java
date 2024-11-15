@@ -1,12 +1,10 @@
 package by.bsuir.antonovich.backend.data.dto;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class UserDto implements DtoEntity {
 
     private Integer id;
@@ -16,10 +14,13 @@ public class UserDto implements DtoEntity {
     /**
      * !RAW password!
      */
-    private String rawPassword;
+    private String password;
     private String firstName;
     private String lastName;
     private String middleName;
+    private DepartmentDto department;
+    private WorkSpaceDto workSpace;
+    private List<OfficeDto> offices;
     private List<RoleDto> roles;
 
 }
