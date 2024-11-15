@@ -11,7 +11,7 @@ const wrongCredsErr = ref(false)
 async function authorize() {
   const userDto = {
     username: username.value,
-    rawPassword: rawPassword.value
+    password: rawPassword.value
   }
 
   fetch("http://localhost:8080/api/v1/auth",

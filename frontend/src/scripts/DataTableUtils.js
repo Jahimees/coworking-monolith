@@ -7,7 +7,7 @@ export default {
 }
 
 function destroyAndInitDataTable(tableName, $dataTable) {
-    if (!$.fn.DataTable.isDataTable('#' + tableName)) {
+    if (!DataTable.isDataTable('#' + tableName)) {
         $dataTable.DataTable().data().clear();
         $dataTable.DataTable().destroy();
     }

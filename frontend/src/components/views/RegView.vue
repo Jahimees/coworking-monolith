@@ -3,7 +3,7 @@
 import {ref} from "vue";
 
 const username = ref("")
-const rawPassword = ref("")
+const password = ref("")
 const confirmPassword = ref("")
 const email = ref("")
 
@@ -20,7 +20,7 @@ function register() {
 
   const userDto = {
     username: username.value,
-    rawPassword: rawPassword.value,
+    password: password.value,
     email: email.value
   }
 
@@ -69,12 +69,12 @@ function register() {
 
 function isFieldsEmpty() {
   return username.value === undefined || username.value === ""
-      || rawPassword.value === undefined || rawPassword.value === ""
+      || password.value === undefined || password.value === ""
       || email.value === undefined || email.value === ""
 }
 
 function isSamePasswords() {
-  return rawPassword.value === confirmPassword.value
+  return password.value === confirmPassword.value
 }
 
 function clearErrors() {
@@ -103,8 +103,8 @@ function clearErrors() {
     </div>
     <div class="block-center">
       <div class="lbl-field">Пароль</div>
-      <div class="err-field" v-if="rawPassword !== confirmPassword">Пароли не совпадают</div>
-      <input name="rawPassword" type="password" v-model="rawPassword" required>
+      <div class="err-field" v-if="password !== confirmPassword">Пароли не совпадают</div>
+      <input name="rawPassword" type="password" v-model="password" required>
     </div>
     <div class="block-center">
       <div class="lbl-field">Подтверждение пароля</div>
