@@ -1,6 +1,8 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import DataTableUtils from "@/scripts/DataTableUtils.js"
+import DataTable from "datatables.net-dt";
+import Modal from "@/components/util/Modal.vue";
 
 let users = ref([])
 
@@ -9,27 +11,23 @@ onMounted(async () => {
       .then(data => data.json())
       .then(json => {
         users = json
-        console.log(users)
-
       })
 
-
   DataTableUtils.initDataTable("users")
-  fillTable(users)
+
+  const $dataTable = fillTable(users)
+  initEventListener($dataTable)
 })
 
 function fillTable(usersJson) {
-  const tableName = "users"
-  const $dataTable = $("#users_table");
-
-  DataTableUtils.destroyAndInitDataTable(tableName, $dataTable)
+  const $dataTable = new DataTable("#users_table");
 
   let timeOptions = {
     hour: 'numeric',
     minute: 'numeric'
   }
 
-  usersJson.forEach(function (usersJson) {
+  Array.of(usersJson).forEach(function (usersJson) {
 
     usersJson.forEach(user => {
       let fullName = (user.lastName != null ? user.lastName : " " +
@@ -44,18 +42,37 @@ function fillTable(usersJson) {
       const role = user.roles != null ? user.roles[0].name : ""
       const workSpace = user.workSpace != null ? user.workSpace : ""
 
-      const rowNode = $dataTable.DataTable().row.add([
+      $dataTable.row.add([
         fullName,
         username,
         email,
         department,
         role,
         workSpace,
-      ])
-          .draw()
-          .node();
+      ]).draw(false)
     })
   })
+
+  return $dataTable
+}
+
+function initEventListener($dataTable) {
+  $dataTable.on('click', 'tbody tr', function () {
+    let data = $dataTable.row(this).data();
+
+    // alert('You clicked on ' + data[0] + "'s row");
+    openModal()
+  });
+}
+
+const isModalVisible = ref(false)
+
+function openModal() {
+  isModalVisible.value = true
+}
+
+function closeModal() {
+  isModalVisible.value = false
 }
 </script>
 
@@ -75,18 +92,11 @@ function fillTable(usersJson) {
         <th>Рабочее место</th>
       </tr>
       </thead>
-      <tbody>
-      <tr>
-        <td>Row 1 Data 1</td>
-        <td>Row 1 Data 2</td>
-      </tr>
-      <tr>
-        <td>Row 2 Data 1</td>
-        <td>Row 2 Data 2</td>
-      </tr>
-      </tbody>
     </table>
   </div>
+
+  <Modal v-show="isModalVisible"
+         @close="closeModal"/>
 </template>
 
 <style scoped>

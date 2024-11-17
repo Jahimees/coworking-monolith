@@ -5,6 +5,7 @@ import SettingsView from "@/components/views/SettingsView.vue";
 import DepartmentManagement from "@/components/views/DepartmentManagement.vue";
 import OfficeManagement from "@/components/views/OfficeManagement.vue";
 import ManagePeople from "@/components/views/PeopleManagement.vue";
+import Modal from "@/components/util/Modal.vue";
 
 //account check fetch
 Utils.redirectToAuthIfNotAuthorized()
@@ -16,6 +17,8 @@ const isSettings = ref(true)
 const isPeopleManagement = ref(false)
 const isDepartmentManagement = ref(false)
 const isOfficeManagement = ref(false)
+
+const isModalVisible = ref(false)
 
 var prevTarget = isSettings
 
@@ -60,12 +63,20 @@ onMounted(() => {
   })
 
 })
+
+function openModal() {
+  isModalVisible.value = true
+}
+
+function closeModal() {
+  isModalVisible.value = false
+}
 </script>
 
 <template>
 
   <div class="inline-block">
-    <div style="background-color: #3389DFFF; height: 100vh" id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_USER'">
+    <div id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_USER'">
       <div><img src="@/assets/images/nauchsoft_logo.png" class="block-center"></div>
       <div style="font-family: 'codropsicons'">Текущий офис:</div>
       <a href="/" class="menu-btn">На главную</a>
@@ -83,9 +94,19 @@ onMounted(() => {
     </div>
   </div>
 
+  <Modal v-show="isModalVisible"
+         @close="closeModal"/>
+
+  <button @click="openModal">OPEN MODAL</button>
+
 </template>
 
 <style scoped>
+
+#menu-bar {
+  background-color: #1b5a9a;
+  height: 100vh;
+}
 
 img {
   width: 25vh;

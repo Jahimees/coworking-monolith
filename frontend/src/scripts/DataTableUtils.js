@@ -8,8 +8,8 @@ export default {
 
 function destroyAndInitDataTable(tableName, $dataTable) {
     if (!DataTable.isDataTable('#' + tableName)) {
-        $dataTable.DataTable().data().clear();
-        $dataTable.DataTable().destroy();
+        $dataTable.data().clear();
+        $dataTable.destroy();
     }
 
     initDataTable(tableName);
@@ -45,7 +45,4 @@ function initDataTable(tableId) {
         }
     })
 
-    if (tableId === "appointment") {
-        initFilter();
-    }
 }
