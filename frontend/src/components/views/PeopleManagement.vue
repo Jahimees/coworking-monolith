@@ -8,8 +8,16 @@ let users = ref([])
 const data = ref([])
 const columnDefs = [{visible: false}, {width: '25%'}, {width: '15%'}, {width: '20%'}, {width: '10%'}, {width: '10%'}, {width: '10%'}]
 
+onMounted(() => {
+  initDataTable()
+})
 
-onMounted(async () => {
+function reloadTable() {
+  DataTableUtils.destroyDataTable("users")
+  initDataTable()
+}
+
+async function initDataTable() {
   await fetch("http://localhost:8080/api/v1/users")
       .then(data => data.json())
       .then(json => {
@@ -20,7 +28,7 @@ onMounted(async () => {
 
   const $dataTable = fillTable(users)
   initCellClickEventListener($dataTable)
-})
+}
 
 function initCellClickEventListener($dataTable) {
   $dataTable.on('click', 'tbody tr', function () {
@@ -33,17 +41,12 @@ function initCellClickEventListener($dataTable) {
 function fillTable(usersJson) {
   const $dataTable = new DataTable("#users_table");
 
-  // let timeOptions = {
-  //   hour: 'numeric',
-  //   minute: 'numeric'
-  // }
-
   Array.of(usersJson).forEach(function (usersJson) {
 
     usersJson.forEach(user => {
-      let fullName = (user.lastName != null ? user.lastName : " " +
-      user.firstName != null ? user.firstName : " " +
-      user.middleName != null ? user.middleName : "");
+      let fullName = ((user.lastName != null ? user.lastName : " ") + " " +
+          (user.firstName != null ? user.firstName : " ") + " " +
+          (user.middleName != null ? user.middleName : ""));
 
       fullName = fullName != null ? fullName.trim() : ""
 
@@ -104,7 +107,8 @@ function closeModal() {
   <UserUpdateModal v-show="isModalVisible" :data="data"
                    :title="'Изменение пользователя'"
                    :action="'update'"
-                   @close="closeModal"/>
+                   @close="closeModal"
+                   @reload-table="reloadTable"/>
 </template>
 
 <style scoped>

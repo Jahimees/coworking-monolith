@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
         oldUser.setUsername(newUser.getUsername() != null && !newUser.getUsername().isEmpty() ? newUser.getUsername() : oldUser.getUsername());
         oldUser.setFirstName(newUser.getFirstName() != null && !newUser.getFirstName().isEmpty() ? newUser.getFirstName() : oldUser.getFirstName());
         oldUser.setLastName(newUser.getLastName() != null && !newUser.getLastName().isEmpty() ? newUser.getLastName() : oldUser.getLastName());
-        oldUser.setMiddleName(newUser.getMiddleName() != null && newUser.getMiddleName().isEmpty() ? newUser.getMiddleName() : oldUser.getMiddleName());
+        oldUser.setMiddleName(newUser.getMiddleName() != null && !newUser.getMiddleName().isEmpty() ? newUser.getMiddleName() : oldUser.getMiddleName());
 
          return userRepository.saveAndFlush(oldUser);
     }

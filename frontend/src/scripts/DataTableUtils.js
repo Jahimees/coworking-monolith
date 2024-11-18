@@ -3,6 +3,7 @@ import DataTable from 'datatables.net-dt';
 
 export default {
     destroyAndInitDataTable,
+    destroyDataTable,
     initDataTable
 }
 
@@ -13,6 +14,14 @@ function destroyAndInitDataTable(tableName, $dataTable) {
     }
 
     initDataTable(tableName);
+}
+
+function destroyDataTable(tableName) {
+    if (!DataTable.isDataTable('#' + tableName)) {
+        let $dataTable = new DataTable('#' + tableName + "_table")
+        $dataTable.data().clear();
+        $dataTable.destroy();
+    }
 }
 
 function initDataTable(tableId, columnDefs) {

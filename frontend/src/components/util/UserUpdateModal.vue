@@ -1,16 +1,31 @@
 <script setup>
 
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 const labels = [
   "ID", "ФИО", "Имя пользователя", "Email", "Отдел", "Роль", "Рабочее место", "Новый пароль"
+]
+
+const errorLabels = [
+  "ID неизменяем",
+  "ФИО: до 3 слов на кириллице, разделенных пробелами. <60 символов",
+  "Имя пользователя: не менее 5 и не более 30 латинских символов и цифр",
+  "Email не соответствует стандартному шаблону", "", "", "", "Длина пароля должна быть не менее 5 и не более 50 символов"
 ]
 
 const inputNames = [
   "id", "name", "username", "email", "department", "roles", "workspace", "password"
 ]
 
-const $emit = defineEmits(['close'])
+const url = "http://localhost:8080/api/v1/users"
+
+let isIdCorrect = ref(true)
+let isNameCorrect = ref(true)
+let isUsernameCorrect = ref(true)
+let isEmailCorrect = ref(true)
+let isPasswordCorrect = ref(true)
+
+const $emit = defineEmits(['close', 'reloadTable'])
 
 const props = defineProps({
   title: {
@@ -33,12 +48,91 @@ onMounted(() => {
 })
 
 function updateUser() {
-  console.log(userParams.value)
+  clearErrors()
+
+  let mutableUserParams = userParams._value
+  if (!validateFields(mutableUserParams)) {
+    console.log("ERROR")
+    return;
+  }
+
+  let id = mutableUserParams[0]
+  let fullName = mutableUserParams[1]
+  let username = mutableUserParams[2]
+  let email = mutableUserParams[3]
+  let department = mutableUserParams[4]
+  let role = mutableUserParams[5]
+  let workSpace = mutableUserParams[6]
+  let password = $("input[name=password]")[0].value
+
+  let splittedName = fullName.split(' ')
+  let firstName = splittedName[1];
+  let lastName = splittedName[0];
+  let middleName = splittedName[2];
+
+  let json = {
+    firstName: firstName,
+    lastName: lastName,
+    middleName: middleName,
+    username: username,
+    email: email,
+    password: password
+  }
+
+
+  fetch(url + "/" + props.data[2], {
+    method: "PATCH",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json)
+  })
+      .then(data => data.json())
+      .then(json => {
+        $emit('reloadTable')
+      })
+
+
   close()
 }
 
-function createUser() {
+function validateFields(userParams) {
+  let id = userParams[0]
+  let fullName = userParams[1]
+  let username = userParams[2]
+  let email = userParams[3]
+  let password = $("input[name=password]")[0].value
 
+  if (id !== props.data[0]) {
+    isIdCorrect.value = false;
+  }
+
+  let clearName = typeof fullName === 'undefined' ? '' : fullName.replace(/\s+/g, ' ').trim();
+  let splittedName = clearName.split(' ')
+  if (splittedName[0] === '' || (splittedName.length < 1 || splittedName.length > 3)
+      || !/^[А-Яа-яЁё\s]+$/.test(clearName) || splittedName.length > 60) {
+    isNameCorrect.value = false;
+  }
+
+  if (typeof username === "undefined" || username.length < 5 || username.length > 30
+      || !/^[A-Za-z0-9]+$/.test(username)) {
+    isUsernameCorrect.value = false
+  }
+
+  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    isEmailCorrect.value = false
+  }
+
+  if (password.length > 0) {
+    if (password.length < 5 || password.length > 50) {
+      isPasswordCorrect.value = false
+    }
+  }
+
+  return isIdCorrect.value && isNameCorrect.value && isUsernameCorrect.value && isEmailCorrect.value && isPasswordCorrect.value
+}
+
+function createUser() {
   close()
 }
 
@@ -48,6 +142,18 @@ function deleteUser() {
 
 function close() {
   $emit('close')
+}
+
+function clearErrors() {
+  isIdCorrect.value = true;
+  isNameCorrect.value = true;
+  isEmailCorrect.value = true;
+  isUsernameCorrect.value = true;
+  isPasswordCorrect.value = true;
+}
+
+function isInputCorrect(inputName) {
+  return this['is' + inputName.charAt(0).toUpperCase() + inputName.slice(1) + 'Correct'];
 }
 
 </script>
@@ -78,16 +184,22 @@ function close() {
           <slot name="body">
             <div id="modal-box">
               <div v-for="(item, index) in userParams" :key="index">
-                <label>{{ labels[index] }}</label>
-                <input
-                    :name="inputNames[index]"
-                    v-model="userParams[index]"
-                    :disabled="index === 0"
-                />
+                <label :name="inputNames[index]" class="err-label" v-if="!isInputCorrect(inputNames[index])">
+                  {{ errorLabels[index] }}</label>
+                <div>
+                  <label>{{ labels[index] }}</label>
+                  <input
+                      :name="inputNames[index]"
+                      v-model="userParams[index]"
+                      :disabled="index === 0"
+                  />
+                </div>
               </div>
               <div>
-                <label>Новый пароль</label>
-                <input name="password" type="password">
+                <div>
+                  <label>Новый пароль</label>
+                  <input name="password" type="password">
+                </div>
               </div>
             </div>
           </slot>
@@ -131,6 +243,11 @@ function close() {
 #modalDescription {
   margin: 0 auto;
   display: block;
+}
+
+.err-label {
+  color: red;
+  font-size: 0.8em;
 }
 
 .modal-backdrop {
@@ -178,13 +295,17 @@ function close() {
 }
 
 
-#modal-box > div {
+#modal-box > div > div {
   display: flex;
-  margin: 1em 0 0 0;
+  margin: 0 0 0 0;
   font-size: 1.2em;
 }
 
-#modal-box > div > label {
+#modal-box > div {
+  margin: 1em 0 0 0;
+}
+
+#modal-box > div > div > label {
   margin-right: 15px;
 }
 
