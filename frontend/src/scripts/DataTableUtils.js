@@ -15,9 +15,10 @@ function destroyAndInitDataTable(tableName, $dataTable) {
     initDataTable(tableName);
 }
 
-function initDataTable(tableId) {
+function initDataTable(tableId, columnDefs) {
     const tableName = tableId ? tableId : "default";
     new DataTable('#' + tableName + "_table", {
+        columns: columnDefs,
         order: [[1, 'asc'], [2, 'asc']],
         "language": {
             "decimal": "",
@@ -33,10 +34,10 @@ function initDataTable(tableId) {
             "search": "Поиск:",
             "zeroRecords": "Совпадений не найдено",
             "paginate": {
-                "first": "Первая",
-                "last": "Последняя",
-                "next": ">>",
-                "previous": "<<"
+                "first": "<<",
+                "last": ">>",
+                "next": ">",
+                "previous": "<"
             },
             "aria": {
                 "sortAscending": ": активировать сортировку по возрастанию",

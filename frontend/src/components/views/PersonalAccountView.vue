@@ -5,7 +5,7 @@ import SettingsView from "@/components/views/SettingsView.vue";
 import DepartmentManagement from "@/components/views/DepartmentManagement.vue";
 import OfficeManagement from "@/components/views/OfficeManagement.vue";
 import ManagePeople from "@/components/views/PeopleManagement.vue";
-import Modal from "@/components/util/Modal.vue";
+import Modal from "@/components/util/UserUpdateModal.vue";
 
 //account check fetch
 Utils.redirectToAuthIfNotAuthorized()

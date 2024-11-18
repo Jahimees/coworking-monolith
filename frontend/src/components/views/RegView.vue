@@ -152,14 +152,6 @@ input {
   font-family: 'codropsicons';
 }
 
-button {
-  font-size: 2em;
-  font-family: 'codropsicons';
-  margin-top: 0.5em;
-  border-radius: 0.3em;
-  padding: 0.4em 0.5em;
-}
-
 .bg-image {
   background-image: url("@/assets/images/auth_back.jpg");
   width: 60%;

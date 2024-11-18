@@ -2,9 +2,12 @@
 import {onMounted, ref} from "vue";
 import DataTableUtils from "@/scripts/DataTableUtils.js"
 import DataTable from "datatables.net-dt";
-import Modal from "@/components/util/Modal.vue";
+import UserUpdateModal from "@/components/util/UserUpdateModal.vue";
 
 let users = ref([])
+const data = ref([])
+const columnDefs = [{visible: false}, {width: '25%'}, {width: '15%'}, {width: '20%'}, {width: '10%'}, {width: '10%'}, {width: '10%'}]
+
 
 onMounted(async () => {
   await fetch("http://localhost:8080/api/v1/users")
@@ -13,19 +16,27 @@ onMounted(async () => {
         users = json
       })
 
-  DataTableUtils.initDataTable("users")
+  DataTableUtils.initDataTable("users", columnDefs)
 
   const $dataTable = fillTable(users)
-  initEventListener($dataTable)
+  initCellClickEventListener($dataTable)
 })
+
+function initCellClickEventListener($dataTable) {
+  $dataTable.on('click', 'tbody tr', function () {
+    data.value = $dataTable.row(this).data();
+
+    openModal()
+  });
+}
 
 function fillTable(usersJson) {
   const $dataTable = new DataTable("#users_table");
 
-  let timeOptions = {
-    hour: 'numeric',
-    minute: 'numeric'
-  }
+  // let timeOptions = {
+  //   hour: 'numeric',
+  //   minute: 'numeric'
+  // }
 
   Array.of(usersJson).forEach(function (usersJson) {
 
@@ -41,8 +52,10 @@ function fillTable(usersJson) {
       const department = user.department != null ? user.department.name : "";
       const role = user.roles != null ? user.roles[0].name : ""
       const workSpace = user.workSpace != null ? user.workSpace : ""
+      const id = user.id;
 
       $dataTable.row.add([
+        id,
         fullName,
         username,
         email,
@@ -56,15 +69,7 @@ function fillTable(usersJson) {
   return $dataTable
 }
 
-function initEventListener($dataTable) {
-  $dataTable.on('click', 'tbody tr', function () {
-    let data = $dataTable.row(this).data();
-
-    // alert('You clicked on ' + data[0] + "'s row");
-    openModal()
-  });
-}
-
+//MODAL
 const isModalVisible = ref(false)
 
 function openModal() {
@@ -84,6 +89,7 @@ function closeModal() {
     <table id="users_table" class="display">
       <thead>
       <tr>
+        <th style="display: none">id</th>
         <th>ФИО</th>
         <th>Имя пользователя</th>
         <th>Email</th>
@@ -95,8 +101,10 @@ function closeModal() {
     </table>
   </div>
 
-  <Modal v-show="isModalVisible"
-         @close="closeModal"/>
+  <UserUpdateModal v-show="isModalVisible" :data="data"
+                   :title="'Изменение пользователя'"
+                   :action="'update'"
+                   @close="closeModal"/>
 </template>
 
 <style scoped>

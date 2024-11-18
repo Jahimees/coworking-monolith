@@ -182,11 +182,6 @@ input {
   font-size: 1em;
 }
 
-button {
-  margin: 0.5em auto 0 auto;
-  display: block;
-}
-
 .btn-container {
   margin: 0 1.5vh;
   bottom: 5%;
