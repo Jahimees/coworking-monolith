@@ -3,9 +3,10 @@ import {onMounted, ref} from "vue";
 import DataTableUtils from "@/scripts/DataTableUtils.js"
 import DataTable from "datatables.net-dt";
 import UserUpdateModal from "@/components/util/UserUpdateModal.vue";
+import InfoModal from "@/components/util/InfoModal.vue";
 
 let users = ref([])
-const data = ref([])
+const clickedRowData = ref([])
 const columnDefs = [{visible: false}, {width: '25%'}, {width: '15%'}, {width: '20%'}, {width: '10%'}, {width: '10%'}, {width: '10%'}]
 
 onMounted(() => {
@@ -32,55 +33,78 @@ async function initDataTable() {
 
 function initCellClickEventListener($dataTable) {
   $dataTable.on('click', 'tbody tr', function () {
-    data.value = $dataTable.row(this).data();
+    clickedRowData.value = $dataTable.row(this).data();
+    console.log(clickedRowData.value)
 
-    openModal()
+    openEditUserModal()
   });
 }
 
 function fillTable(usersJson) {
   const $dataTable = new DataTable("#users_table");
 
-  Array.of(usersJson).forEach(function (usersJson) {
+  usersJson.forEach(user => {
+    let fullName = ((user.lastName != null ? user.lastName : " ") + " " +
+        (user.firstName != null ? user.firstName : " ") + " " +
+        (user.middleName != null ? user.middleName : ""));
 
-    usersJson.forEach(user => {
-      let fullName = ((user.lastName != null ? user.lastName : " ") + " " +
-          (user.firstName != null ? user.firstName : " ") + " " +
-          (user.middleName != null ? user.middleName : ""));
+    fullName = fullName != null ? fullName.trim() : ""
 
-      fullName = fullName != null ? fullName.trim() : ""
+    const username = user.username.trim();
+    const email = user.email.trim();
+    const department = user.department != null ? user.department.name : "";
+    const role = user.roles != null ? user.roles[0].name : ""
+    const workSpace = user.workSpace != null ? user.workSpace : ""
+    const id = user.id;
 
-      const username = user.username.trim();
-      const email = user.email.trim();
-      const department = user.department != null ? user.department.name : "";
-      const role = user.roles != null ? user.roles[0].name : ""
-      const workSpace = user.workSpace != null ? user.workSpace : ""
-      const id = user.id;
-
-      $dataTable.row.add([
-        id,
-        fullName,
-        username,
-        email,
-        department,
-        role,
-        workSpace,
-      ]).draw(false)
-    })
+    $dataTable.row.add([
+      id,
+      fullName,
+      username,
+      email,
+      department,
+      role,
+      workSpace,
+    ]).draw(false)
   })
 
   return $dataTable
 }
 
 //MODAL
-const isModalVisible = ref(false)
 
-function openModal() {
-  isModalVisible.value = true
+const isEditUserModalVisible = ref(false)
+const isInfoModalVisible = ref(false)
+const infoTitle = ref("")
+const infoMessage = ref("")
+
+function openEditUserModal() {
+  isEditUserModalVisible.value = true
 }
 
-function closeModal() {
-  isModalVisible.value = false
+function closeEditUserModal() {
+  isEditUserModalVisible.value = false
+}
+
+function onSuccessUserUpdate() {
+  console.log("USCCESS")
+  infoTitle.value = "Успех"
+  infoMessage.value = "Действие выполнено успешно"
+  openInfoModal()
+}
+
+function onFailUserUpdate() {
+  infoTitle.value = "Ошибка"
+  infoMessage.value = "Произошла ошибка сохранения"
+  openInfoModal()
+}
+
+function openInfoModal() {
+  isInfoModalVisible.value = true;
+}
+
+function closeInfoModal() {
+  isInfoModalVisible.value = false;
 }
 </script>
 
@@ -104,11 +128,18 @@ function closeModal() {
     </table>
   </div>
 
-  <UserUpdateModal v-show="isModalVisible" :data="data"
+  <UserUpdateModal v-show="isEditUserModalVisible" :data="clickedRowData"
                    :title="'Изменение пользователя'"
                    :action="'update'"
-                   @close="closeModal"
+                   @close="closeEditUserModal"
+                   @success="onSuccessUserUpdate"
+                   @fail="onFailUserUpdate"
                    @reload-table="reloadTable"/>
+
+  <InfoModal v-show="isInfoModalVisible"
+             :title="infoTitle"
+             :message="infoMessage"
+             @close="closeInfoModal"/>
 </template>
 
 <style scoped>

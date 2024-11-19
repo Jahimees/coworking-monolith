@@ -25,7 +25,7 @@ let isUsernameCorrect = ref(true)
 let isEmailCorrect = ref(true)
 let isPasswordCorrect = ref(true)
 
-const $emit = defineEmits(['close', 'reloadTable'])
+const $emit = defineEmits(['close', 'reloadTable', 'success', 'fail'])
 
 const props = defineProps({
   title: {
@@ -52,7 +52,6 @@ function updateUser() {
 
   let mutableUserParams = userParams._value
   if (!validateFields(mutableUserParams)) {
-    console.log("ERROR")
     return;
   }
 
@@ -89,7 +88,11 @@ function updateUser() {
   })
       .then(data => data.json())
       .then(json => {
+        $emit('success')
         $emit('reloadTable')
+      })
+      .catch(ev => {
+        $emit('fail')
       })
 
 
@@ -155,6 +158,8 @@ function clearErrors() {
 function isInputCorrect(inputName) {
   return this['is' + inputName.charAt(0).toUpperCase() + inputName.slice(1) + 'Correct'];
 }
+
+//TODO load departments, load workspaces, load offices???, roles like select
 
 </script>
 <template>

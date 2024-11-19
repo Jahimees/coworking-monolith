@@ -85,7 +85,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-input {
+input, select {
   padding: 5px;
   border-radius: 5px;
   outline: none;

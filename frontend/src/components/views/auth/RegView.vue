@@ -86,7 +86,7 @@ function clearErrors() {
 </script>
 
 <template>
-  <a class="block-center m-t-3em" href="/"><img src="@/assets/images/nauchsoft_logo.png"></a>
+  <a class="block-center m-t-3em" href="/frontend/public"><img src="../../../assets/images/nauchsoft_logo.png"></a>
   <form class="bg-image p-tb-3em m-t-3em block-center">
     <h1 class="block-center">GoCow Регистрация</h1>
     <div class="err-field" v-if="isServiceUnavailable">Сервис недоступен, попробуйте позже</div>

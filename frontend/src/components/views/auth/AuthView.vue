@@ -65,8 +65,8 @@ function test() {
 </script>
 
 <template>
-  <a class="block-center m-t-3em" href="/">
-    <img src="@/assets/images/nauchsoft_logo.png">
+  <a class="block-center m-t-3em" href="/frontend/public">
+    <img src="../../../assets/images/nauchsoft_logo.png">
   </a>
   <div class="bg-image p-tb-3em m-t-5em block-center">
     <h1 class="block-center">NAUCHSOFT Авторизация</h1>

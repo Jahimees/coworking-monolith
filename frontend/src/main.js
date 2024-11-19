@@ -15,8 +15,8 @@ import "./scripts/DataTableUtils.js"
 // import "http://html5shiv.googlecode.com/svn/trunk/html5.js"
 import {createApp} from 'vue'
 import App from './App.vue'
-import AuthView from "@/components/views/AuthView.vue";
-import RegView from "@/components/views/RegView.vue";
+import AuthView from "@/components/views/auth/AuthView.vue";
+import RegView from "@/components/views/auth/RegView.vue";
 import HomeView from "@/components/views/HomeView.vue";
 import DrawPanelView from "@/components/views/DrawPanelView.vue";
 import PersonalAccountView from "@/components/views/PersonalAccountView.vue"

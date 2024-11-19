@@ -11,4 +11,5 @@ public class DepartmentDto implements DtoEntity {
 
     private Integer id;
     private String name;
+    private UserDto user;
 }
