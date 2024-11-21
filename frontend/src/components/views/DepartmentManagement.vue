@@ -5,11 +5,18 @@ import DataTableUtils from "@/scripts/DataTableUtils.js";
 import DataTable from "datatables.net-dt";
 import SearchSelect from "@/components/util/SearchSelect.vue";
 
-const departments = ref([])
+let departments = ref([])
 const clickedRowData = ref([])
 const users = ref([])
-let usersMap = [];
 const columnDefs = [{visible: false}, {width: '25%'}, {visible: false}, {width: '20%'}]
+
+const selectedUserId = ref(-1)
+const newDepartmentName = ref("")
+
+const isDepartmentValid = ref(true)
+const departmentErrorLabel = "Название департамента должно содержать от 1 до 50 символов"
+
+let usersMap = [];
 
 onMounted(() => {
   initDataTable()
@@ -26,15 +33,10 @@ async function loadUsers() {
     usersMap.push({id: user.id, name: getUserFullName(user)})
   })
 
-  initUserSelect();
-}
-
-function initUserSelect() {
-
 }
 
 function reloadTable() {
-  DataTableUtils.destroyDataTable("users")
+  DataTableUtils.destroyDataTable("departments")
   initDataTable()
 }
 
@@ -42,13 +44,13 @@ async function initDataTable() {
   await fetch("http://localhost:8080/api/v1/departments")
       .then(data => data.json())
       .then(json => {
-        departments.value = json
+        departments = json
       })
 
   DataTableUtils.initDataTable("departments", columnDefs)
 
-  const $dataTable = fillTable(departments.value)
-  initCellClickEventListener($dataTable)
+  const $dataTable = fillTable(departments)
+  // initCellClickEventListener($dataTable)
 }
 
 function initCellClickEventListener($dataTable) {
@@ -60,8 +62,7 @@ function initCellClickEventListener($dataTable) {
 }
 
 function fillTable(departmentsJson) {
-  const $dataTable = new DataTable("#users_table");
-
+  const $dataTable = new DataTable("#departments_table");
 
   departmentsJson.forEach(department => {
     let bossFullName = ""
@@ -80,10 +81,10 @@ function fillTable(departmentsJson) {
     const departmentId = department.id
 
     $dataTable.row.add([
-      bossId,
-      bossFullName,
       departmentId,
       departmentName,
+      bossId,
+      bossFullName,
     ]).draw(false)
   })
 
@@ -105,6 +106,43 @@ function getUserFullName(user) {
   }
 
   return ""
+}
+
+function returnIdCallback(id) {
+  selectedUserId.value = id
+}
+
+async function createDepartment() {
+  if (!validateFields()) {
+    return
+  }
+
+  let json = {
+    name: newDepartmentName.value,
+    user: {
+      id: selectedUserId.value
+    }
+  }
+
+  await fetch("http://localhost:8080/api/v1/departments", {
+    method: "POST",
+    body: JSON.stringify(json),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    crossDomain: true
+  })
+      .then(data => data.json())
+      .then(json => console.log(json))
+
+  reloadTable()
+}
+
+function validateFields() {
+  let newDepartment = newDepartmentName.value;
+  isDepartmentValid.value = newDepartment.trim().length > 0 && newDepartment.trim().length < 51;
+
+  return isDepartmentValid.value
 }
 
 </script>
@@ -130,10 +168,15 @@ function getUserFullName(user) {
       <div class="department-creation-box">
         <h3>Создать новый отдел</h3>
         <label>Начальник отдела</label>
-        <SearchSelect :options="usersMap"/>
+        <SearchSelect :options="usersMap" @return-id="returnIdCallback"/>
+        <div> {{ selectedUserId }}</div>
         <label>Название отдела</label>
-        <input>
-        <button style="display: block; margin: 0.5em auto">Создать</button>
+        <br>
+        <label class="err-label" v-if="!isDepartmentValid">
+          {{ departmentErrorLabel }}
+        </label>
+        <input v-model="newDepartmentName">
+        <button style="display: block; margin: 0.5em auto" @click="createDepartment">Создать</button>
       </div>
     </div>
   </div>
@@ -160,5 +203,6 @@ select, input {
 
 .department-creation-box {
   margin: 0 auto;
+  width: 100%;
 }
 </style>

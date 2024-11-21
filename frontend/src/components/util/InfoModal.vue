@@ -1,6 +1,6 @@
 <script setup>
 
-const $emit = defineEmits(['close'])
+const $emits = defineEmits(['close'])
 
 defineProps({
   title: {
@@ -14,7 +14,7 @@ defineProps({
 })
 
 function close() {
-  $emit('close')
+  $emits('close')
 }
 
 </script>

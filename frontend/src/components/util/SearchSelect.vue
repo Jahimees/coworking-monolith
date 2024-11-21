@@ -1,11 +1,14 @@
 <script setup>
 import {computed, ref} from 'vue';
 
-const props = defineProps({
-  options: Map
+const $props = defineProps({
+  options: Map,
 })
+
+const $emits = defineEmits(['returnId'])
+
 // Исходные данные
-const options = ref(props.options);
+const options = ref($props.options);
 
 const searchQuery = ref("");
 const isDropdownOpen = ref(false);
@@ -24,19 +27,27 @@ const selectOption = (option) => {
   searchQuery.value = option.name
   selectedId.value = option.id
 
-  console.log(selectedId.value)
-  console.log(selectedOption.value)
+  $emits('returnId', selectedId.value)
+
   isDropdownOpen.value = false;
 };
+
+// onMounted(() => {
+//   $(".select-input").on("click", (e) => {
+//     console.log("clicked")
+//     e.target.value = ""
+//   })
+// })
+
 </script>
 
 <template>
   <div>
     <input class="select-input"
-        type="text"
-        v-model="searchQuery"
-        placeholder="Поиск..."
-        @focus="isDropdownOpen = true"
+           type="text"
+           v-model="searchQuery"
+           placeholder="Поиск..."
+           @focus="isDropdownOpen = true"
     />
     <div v-if="isDropdownOpen" class="dropdown">
       <div

@@ -89,4 +89,8 @@ public class UserService implements UserDetailsService {
          return userRepository.saveAndFlush(oldUser);
     }
 
+    public Optional<User> getById(Integer id) {
+        return userRepository.getUserById(id);
+    }
+
 }

@@ -119,3 +119,8 @@ button:hover {
   background-color: #3379cc;
   transition: 0.3s;
 }
+
+.err-label {
+  color: red;
+  font-size: 0.8em;
+}

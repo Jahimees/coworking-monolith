@@ -250,11 +250,6 @@ function isInputCorrect(inputName) {
   display: block;
 }
 
-.err-label {
-  color: red;
-  font-size: 0.8em;
-}
-
 .modal-backdrop {
   position: fixed;
   bottom: 0;

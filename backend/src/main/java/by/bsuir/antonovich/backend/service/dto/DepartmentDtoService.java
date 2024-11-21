@@ -1,5 +1,6 @@
 package by.bsuir.antonovich.backend.service.dto;
 
+import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.dto.DepartmentDto;
 import by.bsuir.antonovich.backend.service.DepartmentService;
 import by.bsuir.antonovich.backend.service.converter.DepartmentDtoConverter;
@@ -24,5 +25,14 @@ public class DepartmentDtoService {
                         DepartmentDtoConverter.convertToDto(department, Direction.DOWN)));
 
         return departmentDtoList;
+    }
+
+    public DepartmentDto create(DepartmentDto departmentDto) {
+
+        Department department = DepartmentDtoConverter.convertToEntity(departmentDto, Direction.DOWN);
+
+        Department createdDepartment = departmentService.create(department);
+
+        return DepartmentDtoConverter.convertToDto(createdDepartment, Direction.DOWN);
     }
 }
