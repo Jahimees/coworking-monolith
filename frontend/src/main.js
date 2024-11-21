@@ -5,6 +5,7 @@ import './assets/normalize.css'
 import './assets/base.css'
 import './assets/account.css'
 import './assets/datatable-custom.css'
+import './assets/modal.css'
 
 import './scripts/TweenLite.min.js'
 import './scripts/EasePack.min.js'

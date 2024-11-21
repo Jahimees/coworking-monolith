@@ -4,6 +4,9 @@ import {onMounted, ref} from "vue";
 import DataTableUtils from "@/scripts/DataTableUtils.js";
 import DataTable from "datatables.net-dt";
 import SearchSelect from "@/components/util/SearchSelect.vue";
+import InfoModal from "@/components/util/InfoModal.vue";
+import Utils from "@/scripts/Utils.js";
+import DepartmentUpdateModal from "@/components/util/DepartmentUpdateModal.vue";
 
 let departments = ref([])
 const clickedRowData = ref([])
@@ -30,14 +33,9 @@ async function loadUsers() {
 
   usersMap.push({id: -1, name: "Не выбран"})
   users.value.forEach(user => {
-    usersMap.push({id: user.id, name: getUserFullName(user)})
+    usersMap.push({id: user.id, name: Utils.getUserFullName(user)})
   })
 
-}
-
-function reloadTable() {
-  DataTableUtils.destroyDataTable("departments")
-  initDataTable()
 }
 
 async function initDataTable() {
@@ -50,14 +48,14 @@ async function initDataTable() {
   DataTableUtils.initDataTable("departments", columnDefs)
 
   const $dataTable = fillTable(departments)
-  // initCellClickEventListener($dataTable)
+  initCellClickEventListener($dataTable)
 }
 
 function initCellClickEventListener($dataTable) {
   $dataTable.on('click', 'tbody tr', function () {
     clickedRowData.value = $dataTable.row(this).data();
 
-    openEditUserModal()
+    openEditDepartmentModal()
   });
 }
 
@@ -91,23 +89,6 @@ function fillTable(departmentsJson) {
   return $dataTable
 }
 
-function getUserFullName(user) {
-  if (user != null && typeof user !== "undefined") {
-    let fullName =
-        (user.lastName != null ? user.lastName + " " : "") +
-        (user.firstName != null ? user.firstName + " " : "") +
-        (user.middleName != null ? user.middleName : "")
-
-    if (fullName == null || fullName.trim() === "") {
-      return user.username;
-    } else {
-      return fullName
-    }
-  }
-
-  return ""
-}
-
 function returnIdCallback(id) {
   selectedUserId.value = id
 }
@@ -135,7 +116,7 @@ async function createDepartment() {
       .then(data => data.json())
       .then(json => console.log(json))
 
-  reloadTable()
+  DataTableUtils.reloadTable(departments)
 }
 
 function validateFields() {
@@ -143,6 +124,39 @@ function validateFields() {
   isDepartmentValid.value = newDepartment.trim().length > 0 && newDepartment.trim().length < 51;
 
   return isDepartmentValid.value
+}
+
+////MODAL
+
+const isEditDepartmentModalVisible = ref(false)
+const isInfoModalVisible = ref(false)
+const infoTitle = ref("")
+const infoMessage = ref("")
+
+function openEditDepartmentModal() {
+  isEditDepartmentModalVisible.value = true
+}
+
+function closeEditDepartmentModal() {
+  isEditDepartmentModalVisible.value = false
+}
+
+function onSuccessDepartmentUpdate() {
+  openInfoModal()
+}
+
+function onFailDepartmentUpdate() {
+  infoTitle.value = "Ошибка"
+  infoMessage.value = "Произошла ошибка сохранения"
+  openInfoModal()
+}
+
+function openInfoModal() {
+  isInfoModalVisible.value = true;
+}
+
+function closeInfoModal() {
+  isInfoModalVisible.value = false;
 }
 
 </script>
@@ -180,6 +194,19 @@ function validateFields() {
       </div>
     </div>
   </div>
+
+  <DepartmentUpdateModal v-show="isEditDepartmentModalVisible" :data="clickedRowData"
+                         :title="'Изменение отдела'"
+                         :action="'update'"
+                         @close="closeEditDepartmentModal"
+                         @success="onSuccessDepartmentUpdate"
+                         @fail="onFailDepartmentUpdate"
+                         @reload-table="DataTableUtils.reloadTable('departments')"/>
+
+  <InfoModal v-show="isInfoModalVisible"
+             :title="infoTitle"
+             :message="infoMessage"
+             @close="closeInfoModal"/>
 </template>
 
 <style scoped>

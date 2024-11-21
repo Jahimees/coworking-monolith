@@ -5,11 +5,13 @@ const $emits = defineEmits(['close'])
 defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
+    default: "Успех"
   },
   message: {
     type: String,
-    required: true
+    required: true,
+    default: "Действие выполнено успешно"
   }
 })
 

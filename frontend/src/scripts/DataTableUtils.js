@@ -2,18 +2,14 @@ import DataTable from 'datatables.net-dt';
 
 
 export default {
-    destroyAndInitDataTable,
     destroyDataTable,
-    initDataTable
+    initDataTable,
+    reloadTable
 }
 
-function destroyAndInitDataTable(tableName, $dataTable) {
-    if (!DataTable.isDataTable('#' + tableName)) {
-        $dataTable.data().clear();
-        $dataTable.destroy();
-    }
-
-    initDataTable(tableName);
+function reloadTable(tableName) {
+    destroyDataTable(tableName)
+    initDataTable()
 }
 
 function destroyDataTable(tableName) {

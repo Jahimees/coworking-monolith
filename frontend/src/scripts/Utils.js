@@ -1,5 +1,22 @@
 var utils = {
 
+    getUserFullName(user) {
+        if (user != null && typeof user !== "undefined") {
+            let fullName =
+                (user.lastName != null ? user.lastName + " " : "") +
+                (user.firstName != null ? user.firstName + " " : "") +
+                (user.middleName != null ? user.middleName : "")
+
+            if (fullName == null || fullName.trim() === "") {
+                return user.username;
+            } else {
+                return fullName
+            }
+        }
+
+        return ""
+    },
+
     getCookie(name) {
         let matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
