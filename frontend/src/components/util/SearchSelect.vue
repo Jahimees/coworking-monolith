@@ -1,8 +1,9 @@
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 
 const $props = defineProps({
   options: Map,
+  defaultValue: Object
 })
 
 const $emits = defineEmits(['returnId'])
@@ -10,10 +11,15 @@ const $emits = defineEmits(['returnId'])
 // Исходные данные
 const options = ref($props.options);
 
-const searchQuery = ref("");
+const searchQuery = ref('');
 const isDropdownOpen = ref(false);
-const selectedOption = ref(null);
+const selectedOption = ref($props.defaultValue);
 const selectedId = ref(null);
+
+watch(() => selectedOption, async (selectedOption1) => {
+  searchQuery.value = selectedOption1.name
+  selectedId.value = selectedOption1.id
+})
 
 // Фильтрация опций на основе поискового запроса
 const filteredOptions = computed(() =>
@@ -24,20 +30,27 @@ const filteredOptions = computed(() =>
 
 const selectOption = (option) => {
   selectedOption.value = option;
-  searchQuery.value = option.name
-  selectedId.value = option.id
+  searchQuery.value = option?.name
+  selectedId.value = option?.id
 
   $emits('returnId', selectedId.value)
 
   isDropdownOpen.value = false;
 };
 
-// onMounted(() => {
-//   $(".select-input").on("click", (e) => {
-//     console.log("clicked")
-//     e.target.value = ""
-//   })
-// })
+if ($props.defaultValue != null && typeof $props.defaultValue !== "undefined") {
+  selectOption($props.defaultValue)
+}
+
+onMounted(() => {
+  let observer = new MutationObserver(() => {
+    selectOption($props.defaultValue)
+  })
+
+  observer.observe($(".modal-backdrop")[0], {
+    attributes: true
+  })
+})
 
 </script>
 

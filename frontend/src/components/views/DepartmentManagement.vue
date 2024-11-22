@@ -54,7 +54,6 @@ async function initDataTable() {
 function initCellClickEventListener($dataTable) {
   $dataTable.on('click', 'tbody tr', function () {
     clickedRowData.value = $dataTable.row(this).data();
-
     openEditDepartmentModal()
   });
 }
@@ -195,9 +194,11 @@ function closeInfoModal() {
     </div>
   </div>
 
-  <DepartmentUpdateModal v-show="isEditDepartmentModalVisible" :data="clickedRowData"
+  <DepartmentUpdateModal v-show="isEditDepartmentModalVisible"
+                         :data="clickedRowData"
                          :title="'Изменение отдела'"
                          :action="'update'"
+                         :users-map="usersMap"
                          @close="closeEditDepartmentModal"
                          @success="onSuccessDepartmentUpdate"
                          @fail="onFailDepartmentUpdate"
