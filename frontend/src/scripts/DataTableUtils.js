@@ -8,8 +8,9 @@ export default {
 }
 
 function reloadTable(tableName) {
+    console.log(tableName)
     destroyDataTable(tableName)
-    initDataTable()
+    initDataTable(tableName)
 }
 
 function destroyDataTable(tableName) {

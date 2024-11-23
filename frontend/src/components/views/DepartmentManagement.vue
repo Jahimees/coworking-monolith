@@ -39,6 +39,7 @@ async function loadUsers() {
 }
 
 async function initDataTable() {
+  console.log("INIT")
   await fetch("http://localhost:8080/api/v1/departments")
       .then(data => data.json())
       .then(json => {
@@ -61,7 +62,7 @@ function initCellClickEventListener($dataTable) {
 function fillTable(departmentsJson) {
   const $dataTable = new DataTable("#departments_table");
 
-  departmentsJson.forEach(department => {
+  departmentsJson.forEach((department) => {
     let bossFullName = ""
     let bossId
     if (department.user != null && typeof department.user !== "undefined") {
@@ -114,8 +115,9 @@ async function createDepartment() {
   })
       .then(data => data.json())
       .then(json => console.log(json))
+      .catch((err) => console.log(err))
 
-  DataTableUtils.reloadTable(departments)
+  reloadTable()
 }
 
 function validateFields() {
@@ -132,6 +134,12 @@ const isInfoModalVisible = ref(false)
 const infoTitle = ref("")
 const infoMessage = ref("")
 
+function reloadTable() {
+  console.log("RELOAD")
+  DataTableUtils.destroyDataTable("departments")
+  initDataTable()
+}
+
 function openEditDepartmentModal() {
   isEditDepartmentModalVisible.value = true
 }
@@ -141,6 +149,8 @@ function closeEditDepartmentModal() {
 }
 
 function onSuccessDepartmentUpdate() {
+  infoTitle.value = "Успех"
+  infoMessage.value = "Действие выполнено успешно"
   openInfoModal()
 }
 
@@ -202,7 +212,7 @@ function closeInfoModal() {
                          @close="closeEditDepartmentModal"
                          @success="onSuccessDepartmentUpdate"
                          @fail="onFailDepartmentUpdate"
-                         @reload-table="DataTableUtils.reloadTable('departments')"/>
+                         @reload-table="reloadTable()"/>
 
   <InfoModal v-show="isInfoModalVisible"
              :title="infoTitle"

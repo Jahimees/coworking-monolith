@@ -2,7 +2,7 @@
 import {computed, onMounted, ref, watch} from 'vue';
 
 const $props = defineProps({
-  options: Map,
+  options: Array,
   defaultValue: Object
 })
 

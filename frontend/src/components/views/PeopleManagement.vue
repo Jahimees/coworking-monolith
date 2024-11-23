@@ -14,7 +14,8 @@ onMounted(() => {
 })
 
 function reloadTable() {
-  DataTableUtils.reloadTable("users")
+  DataTableUtils.destroyDataTable("users")
+  initDataTable()
 }
 
 async function initDataTable() {
@@ -86,6 +87,8 @@ function closeEditUserModal() {
 }
 
 function onSuccessUserUpdate() {
+  infoTitle.value = "Успех"
+  infoMessage.value = "Действие выполнено успешно"
   openInfoModal()
 }
 

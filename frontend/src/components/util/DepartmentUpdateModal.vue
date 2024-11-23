@@ -43,22 +43,51 @@ const props = defineProps({
 const selectedUserId = ref(-1)
 
 function updateDepartment() {
-  console.log(selectedUserId.value)
-  console.log(props.data)
   clearErrors()
 
-  // let mutableDepartmentParams = departmentParams.value
-  // if (!validateFields(mutableDepartmentParams)) {
-  //   return;
-  // }
-  // close()
+  if (!validateFields()) {
+    return;
+  }
+
+  let id = props.data[0]
+  let name = props.data[1]
+  let userId = selectedUserId.value
+
+  let jsonObj = {
+    id: id,
+    name: name,
+    user: {
+      id: userId
+    }
+  }
+
+  fetch(url + "/" + jsonObj.id, {
+    method: "PATCH",
+    body: JSON.stringify(jsonObj),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+      .then(data => data.json())
+      .then(json => {
+            $emit('success')
+            $emit('reloadTable')
+            console.log(json)
+          }
+      )
+      .catch((err) => {
+        $emit("fail")
+
+        console.log(err)
+      })
+
+  close()
 }
 
-function validateFields(departmentParams) {
+function validateFields() {
 
-  let id = departmentParams[0]
-  let name = departmentParams[1].trim()
-  let user = departmentParams[2]
+  let id = props.data[0]
+  let name = props.data[1]
 
   if (id !== props.data[0]) {
     isDepartmentIdCorrect.value = false;

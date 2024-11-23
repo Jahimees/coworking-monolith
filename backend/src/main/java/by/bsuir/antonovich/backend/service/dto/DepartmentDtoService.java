@@ -35,4 +35,13 @@ public class DepartmentDtoService {
 
         return DepartmentDtoConverter.convertToDto(createdDepartment, Direction.DOWN);
     }
+
+    public DepartmentDto patch(DepartmentDto departmentDto) {
+
+        Department department = DepartmentDtoConverter.convertToEntity(departmentDto, Direction.DOWN);
+
+        Department updatedDepartment = departmentService.patch(department);
+
+        return DepartmentDtoConverter.convertToDto(updatedDepartment, Direction.DOWN);
+    }
 }

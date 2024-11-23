@@ -39,4 +39,28 @@ public class DepartmentService {
 
         return departmentRepository.save(newDepartment);
     }
+
+    public Department patch(Department department) {
+        if (department.getId() == null || department.getId() == -1) {
+            throw new IllegalArgumentException("Department id cannot be null");
+        }
+
+        Optional<Department> oldDepartment = departmentRepository.findById(department.getId());
+
+        if (!oldDepartment.isPresent()) {
+            throw new IllegalArgumentException("Department not found");
+        }
+
+        Department newDepartment = oldDepartment.get();
+
+        if (department.getUser() != null && department.getUser().getId() != 0 && department.getUser().getId() != -1) {
+            userService.getById(department.getUser().getId()).ifPresent(newDepartment::setUser);
+        }
+
+        if (department.getName() != null && !department.getName().isEmpty()) {
+            newDepartment.setName(department.getName());
+        }
+
+        return departmentRepository.save(newDepartment);
+    }
 }
