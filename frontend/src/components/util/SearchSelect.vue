@@ -29,22 +29,35 @@ const filteredOptions = computed(() =>
 );
 
 const selectOption = (option) => {
+
   selectedOption.value = option;
   searchQuery.value = option?.name
   selectedId.value = option?.id
 
   $emits('returnId', selectedId.value)
-
-  isDropdownOpen.value = false;
 };
 
-if ($props.defaultValue != null && typeof $props.defaultValue !== "undefined") {
-  selectOption($props.defaultValue)
+const closeDropDownAndSelect = () => {
+  setTimeout(() => {
+    searchQuery.value = selectedOption.value.name
+    selectedId.value = selectedOption.value.id
+
+    $emits('returnId', selectedId.value)
+
+    isDropdownOpen.value = false;
+  }, 100)
 }
 
 onMounted(() => {
   let observer = new MutationObserver(() => {
-    selectOption($props.defaultValue)
+    console.log($props.defaultValue)
+    console.log($props.options[0])
+    if ($props.defaultValue != null && typeof $props.defaultValue !== "undefined"
+        && $props.defaultValue.id !== '' && typeof $props.defaultValue.id !== "undefined") {
+      selectOption($props.defaultValue)
+    } else {
+      selectOption($props.options[0])
+    }
   })
 
   observer.observe($(".modal-backdrop")[0], {
@@ -61,6 +74,7 @@ onMounted(() => {
            v-model="searchQuery"
            placeholder="Поиск..."
            @focus="isDropdownOpen = true"
+           @focusout="closeDropDownAndSelect()"
     />
     <div v-if="isDropdownOpen" class="dropdown">
       <div

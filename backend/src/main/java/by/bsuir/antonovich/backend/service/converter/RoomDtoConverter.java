@@ -20,7 +20,8 @@ public final class RoomDtoConverter {
 
         room.setId(dto.getId());
         room.setName(dto.getName());
-        room.setSquare(dto.getSquare());
+        room.setWidth(dto.getWidth());
+        room.setLength(dto.getLength());
 
         if (dto.getDepartment() != null) {
             room.setDepartment(DepartmentDtoConverter.convertToEntity(dto.getDepartment(), direction));
@@ -55,7 +56,8 @@ public final class RoomDtoConverter {
 
         roomDto.setId(entity.getId());
         roomDto.setName(entity.getName());
-        roomDto.setSquare(entity.getSquare());
+        roomDto.setWidth(entity.getWidth());
+        roomDto.setLength(entity.getLength());
 
         if (entity.getDepartment() != null) {
             roomDto.setDepartment(DepartmentDtoConverter.convertToDto(entity.getDepartment(), direction));

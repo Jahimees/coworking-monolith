@@ -10,7 +10,8 @@ import java.util.List;
 public class RoomDto implements DtoEntity {
     private Integer id;
     private String name;
-    private Double square;
+    private Double length;
+    private Double width;
 
     private RoomTypeDto roomType;
     private DepartmentDto department;

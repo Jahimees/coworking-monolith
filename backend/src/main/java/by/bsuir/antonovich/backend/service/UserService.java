@@ -1,7 +1,10 @@
 package by.bsuir.antonovich.backend.service;
 
+import by.bsuir.antonovich.backend.data.Department;
+import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.User;
 import by.bsuir.antonovich.backend.exception.*;
+import by.bsuir.antonovich.backend.repository.DepartmentRepository;
 import by.bsuir.antonovich.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -12,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static by.bsuir.antonovich.backend.util.Constants.ROLE_USER;
@@ -23,6 +27,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final DepartmentRepository departmentRepository;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -40,6 +45,10 @@ public class UserService implements UserDetailsService {
         checkUserExistence(user);
 
         user.setRoles(List.of(roleService.findByName(ROLE_USER)));
+
+        if (user.getDepartment() == null || user.getDepartment().getId() == -1) {
+            user.setDepartment(null);
+        }
 
         return userRepository.saveAndFlush(user);
     }
@@ -70,7 +79,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User patchUser(String username, User newUser) throws UserNotFoundException {
+    public User patchUser(String username, User newUser) throws UserNotFoundException, RoleNotFoundException, DepartmentNotFoundException {
         Optional<User> oldUserOptional = findUserByUsername(username);
 
         if (oldUserOptional.isEmpty()) {
@@ -86,11 +95,49 @@ public class UserService implements UserDetailsService {
         oldUser.setLastName(newUser.getLastName() != null && !newUser.getLastName().isEmpty() ? newUser.getLastName() : oldUser.getLastName());
         oldUser.setMiddleName(newUser.getMiddleName() != null && !newUser.getMiddleName().isEmpty() ? newUser.getMiddleName() : oldUser.getMiddleName());
 
-         return userRepository.saveAndFlush(oldUser);
+        Department oldDepartment = oldUser.getDepartment();
+        Department newDepartment = newUser.getDepartment();
+
+        if (oldDepartment == null && newDepartment == null ||
+                oldDepartment == null && newDepartment.getId() != null && newDepartment.getId() == -1) {
+            oldUser.setDepartment(null);
+        } else {
+            if (newDepartment.getId() != null) {
+                Optional<Department> departmentOptional = departmentRepository.findById(newDepartment.getId());
+                if (departmentOptional.isPresent()) {
+                    oldUser.setDepartment(departmentOptional.get());
+                } else {
+                    oldUser.setDepartment(null);
+                }
+            }
+        }
+
+        if (newUser.getRoles() != null && newUser.getRoles().get(0).getId() != null) {
+            Integer newRoleId = newUser.getRoles().get(0).getId();
+            if (!Objects.equals(oldUser.getRoles().get(0).getId(), newRoleId)) {
+                Optional<Role> roleOptional = roleService.findById(newRoleId);
+
+                if (roleOptional.isEmpty()) {
+                    throw new RoleNotFoundException("Role with id %s not found".formatted(newRoleId));
+                }
+
+                oldUser.setRoles(List.of(roleOptional.get()));
+            }
+        }
+
+        try {
+            return userRepository.saveAndFlush(oldUser);
+        } catch (Exception e) {
+            return userRepository.saveAndFlush(oldUser);
+        }
     }
 
     public Optional<User> getById(Integer id) {
         return userRepository.getUserById(id);
+    }
+
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
     }
 
 }

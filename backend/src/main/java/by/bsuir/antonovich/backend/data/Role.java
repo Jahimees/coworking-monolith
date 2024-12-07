@@ -25,6 +25,10 @@ public class Role implements GrantedAuthority, SimpleEntity {
         this.name = roleDto.getName();
     }
 
+    public Role(Integer id) {
+        this.id = id;
+    }
+
     @Override
     public String getAuthority() {
         return name;

@@ -23,13 +23,6 @@ public class DepartmentService {
     public Department create(Department department) {
         Department newDepartment = new Department();
 
-        if (department.getUser() != null && department.getUser().getId() != 0
-                && department.getUser().getId() != -1) {
-
-            Optional<User> userOptional = userService.getById(department.getUser().getId());
-            userOptional.ifPresent(newDepartment::setUser);
-        }
-
         if (department.getName() != null && !department.getName().isEmpty()) {
             newDepartment.setName(department.getName());
 
@@ -53,14 +46,14 @@ public class DepartmentService {
 
         Department newDepartment = oldDepartment.get();
 
-        if (department.getUser() != null && department.getUser().getId() != 0 && department.getUser().getId() != -1) {
-            userService.getById(department.getUser().getId()).ifPresent(newDepartment::setUser);
-        }
-
         if (department.getName() != null && !department.getName().isEmpty()) {
             newDepartment.setName(department.getName());
         }
 
         return departmentRepository.save(newDepartment);
+    }
+
+    public Optional<Department> findById(Integer id) {
+        return departmentRepository.findById(id);
     }
 }

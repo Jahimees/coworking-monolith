@@ -6,6 +6,7 @@ import by.bsuir.antonovich.backend.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,14 @@ public class RoleService {
         Optional<Role> roleOptional = roleRepository.findRoleByName(name);
 
         return roleOptional.orElseThrow(() -> new RoleNotFoundException("Role with name %s not found".formatted(name)));
+    }
+
+    public Optional<Role> findById(Integer id) throws RoleNotFoundException {
+        return roleRepository.findById(id);
+    }
+
+    public List<Role> findAll() {
+        return roleRepository.findAll();
     }
 
 }

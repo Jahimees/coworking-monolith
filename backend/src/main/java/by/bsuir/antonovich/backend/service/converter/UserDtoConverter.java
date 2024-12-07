@@ -23,6 +23,10 @@ public class UserDtoConverter {
         userDto.setLastName(user.getLastName());
         userDto.setMiddleName(user.getMiddleName());
 
+        if (user.getDepartment() != null) {
+            userDto.setDepartment(DepartmentDtoConverter.convertToDto(user.getDepartment(), direction));
+        }
+
         List<RoleDto> roleDtoList = new ArrayList<>();
         user.getRoles().forEach(role -> roleDtoList.add(RoleDtoConverter.convertToDto(role, direction)));
 

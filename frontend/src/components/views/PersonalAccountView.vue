@@ -76,8 +76,9 @@ function closeModal() {
 <template>
 
   <div class="inline-block">
-    <div id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_USER'">
+    <div id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_MANAGER' || parsedToken.roles[0] === 'ROLE_USER'">
       <div><img src="@/assets/images/nauchsoft_logo.png" class="block-center"></div>
+      asdfasdfas
       <div style="font-family: 'codropsicons'">Текущий офис:</div>
       <a href="/" class="menu-btn">На главную</a>
       <a href="#" id="settings" class="menu-btn" :class="{select: isSettings}">Настройки</a>
@@ -93,11 +94,6 @@ function closeModal() {
       <OfficeManagement v-if="isOfficeManagement"/>
     </div>
   </div>
-
-  <Modal v-show="isModalVisible"
-         @close="closeModal"/>
-
-  <button @click="openModal">OPEN MODAL</button>
 
 </template>
 

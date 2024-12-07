@@ -19,7 +19,7 @@ public final class RoleDtoConverter {
     public static Role convertToEntity(RoleDto roleDto, Direction direction) {
         Role role = new Role();
 
-        roleDto.setId(roleDto.getId());
+        role.setId(roleDto.getId());
         role.setName(roleDto.getName());
 
         return role;

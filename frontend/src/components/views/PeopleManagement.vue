@@ -6,11 +6,18 @@ import UserUpdateModal from "@/components/util/UserUpdateModal.vue";
 import InfoModal from "@/components/util/InfoModal.vue";
 
 let users = ref([])
+let roleMap = []
+let departmentMap = []
+let workspaceMap = []
+
 const clickedRowData = ref([])
-const columnDefs = [{visible: false}, {width: '25%'}, {width: '15%'}, {width: '20%'}, {width: '10%'}, {width: '10%'}, {width: '10%'}]
+const columnDefs = [{visible: false}, {width: '25%'}, {width: '15%'}, {width: '20%'}, {visible: false}, {width: '10%'},
+  {visible: false}, {width: '10%'}, {visible: false}, {width: '10%'}]
 
 onMounted(() => {
   initDataTable()
+  loadDepartments()
+  loadRoles()
 })
 
 function reloadTable() {
@@ -53,17 +60,24 @@ function fillTable(usersJson) {
     const username = user.username.trim();
     const email = user.email.trim();
     const department = user.department != null ? user.department.name : "";
+    const departmentId = user.department != null ? user.department.id : ""
     const role = user.roles != null ? user.roles[0].name : ""
+    const roleId = user.roles != null ? user.roles[0].id : ""
     const workSpace = user.workSpace != null ? user.workSpace : ""
     const id = user.id;
+
+    console.log(user)
 
     $dataTable.row.add([
       id,
       fullName,
       username,
       email,
+      departmentId,
       department,
+      roleId,
       role,
+      "",
       workSpace,
     ]).draw(false)
   })
@@ -78,23 +92,44 @@ const isInfoModalVisible = ref(false)
 const infoTitle = ref("")
 const infoMessage = ref("")
 
+const modalAction = ref('update')
+
 function openEditUserModal() {
   isEditUserModalVisible.value = true
+  modalAction.value = 'update'
+}
+
+function openCreateUserModal() {
+  isEditUserModalVisible.value = true
+  modalAction.value = 'create'
+  console.log(modalAction.value)
+  console.log("modalAction")
+  clickedRowData.value = ["", "", "", "", "", "", "", "", ""]
 }
 
 function closeEditUserModal() {
   isEditUserModalVisible.value = false
+  clickedRowData.value = []
 }
 
-function onSuccessUserUpdate() {
+function onSuccessUserUpdate(text) {
   infoTitle.value = "Успех"
-  infoMessage.value = "Действие выполнено успешно"
+  if (typeof text === "undefined" || text === null || text === "") {
+    infoMessage.value = "Действие выполнено успешно"
+  } else {
+    infoMessage.value = text
+  }
+
   openInfoModal()
 }
 
-function onFailUserUpdate() {
+function onFailUserUpdate(text) {
   infoTitle.value = "Ошибка"
-  infoMessage.value = "Произошла ошибка сохранения"
+  if (typeof text === "undefined" || text === "" || text === null) {
+    infoMessage.value = "Произошла ошибка сохранения"
+  } else {
+    infoMessage.value = text;
+  }
   openInfoModal()
 }
 
@@ -104,6 +139,34 @@ function openInfoModal() {
 
 function closeInfoModal() {
   isInfoModalVisible.value = false;
+}
+
+/////////////SEARCH SELECTS////////////////
+
+async function loadDepartments() {
+  const departmentsJson = ref([])
+  await fetch("http://localhost:8080/api/v1/departments")
+      .then(data => data.json())
+      .then(json => departmentsJson.value = json)
+
+  departmentMap.push({id: -1, name: "Не выбран"})
+  departmentsJson.value.forEach(department => {
+    departmentMap.push({id: department.id, name: department.name})
+  })
+}
+
+async function loadRoles() {
+  const rolesJson = ref([])
+  await fetch("http://localhost:8080/api/v1/roles")
+      .then(data => data.json())
+      .then(json => rolesJson.value = json)
+
+  rolesJson.value.forEach(role => {
+    roleMap.push({id: role.id, name: role.name})
+  })
+}
+
+function loadWorkspaces() {
 }
 </script>
 
@@ -119,17 +182,24 @@ function closeInfoModal() {
         <th>ФИО</th>
         <th>Имя пользователя</th>
         <th>Email</th>
+        <th style="display: none">departmentId</th>
         <th>Отдел</th>
+        <th style="display: none">roleId</th>
         <th>Роль</th>
+        <th style="display: none">workspaceId</th>
         <th>Рабочее место</th>
       </tr>
       </thead>
     </table>
+    <button @click="openCreateUserModal">Создать пользователя</button>
   </div>
 
-  <UserUpdateModal v-show="isEditUserModalVisible" :data="clickedRowData"
+  <UserUpdateModal v-show="isEditUserModalVisible"
+                   :data="clickedRowData"
                    :title="'Изменение пользователя'"
-                   :action="'update'"
+                   :action="modalAction"
+                   :department-map="departmentMap"
+                   :role-map="roleMap"
                    @close="closeEditUserModal"
                    @success="onSuccessUserUpdate"
                    @fail="onFailUserUpdate"

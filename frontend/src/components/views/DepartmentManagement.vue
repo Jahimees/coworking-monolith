@@ -10,7 +10,7 @@ import DepartmentUpdateModal from "@/components/util/DepartmentUpdateModal.vue";
 
 let departments = ref([])
 const clickedRowData = ref([])
-const users = ref([])
+
 const columnDefs = [{visible: false}, {width: '25%'}, {visible: false}, {width: '20%'}]
 
 const selectedUserId = ref(-1)
@@ -27,6 +27,7 @@ onMounted(() => {
 })
 
 async function loadUsers() {
+  const users = ref([])
   await fetch("http://localhost:8080/api/v1/users")
       .then(data => data.json())
       .then(json => users.value = json)

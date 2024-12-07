@@ -2,11 +2,7 @@ package by.bsuir.antonovich.backend.service.dto;
 
 import by.bsuir.antonovich.backend.data.User;
 import by.bsuir.antonovich.backend.data.dto.UserDto;
-import by.bsuir.antonovich.backend.exception.EmailAlreadyExistsException;
-import by.bsuir.antonovich.backend.exception.NotEnoughRegistrationData;
-import by.bsuir.antonovich.backend.exception.RoleNotFoundException;
-import by.bsuir.antonovich.backend.exception.UserNotFoundException;
-import by.bsuir.antonovich.backend.exception.UsernameAlreadyExistsException;
+import by.bsuir.antonovich.backend.exception.*;
 import by.bsuir.antonovich.backend.service.UserService;
 import by.bsuir.antonovich.backend.service.converter.UserDtoConverter;
 import lombok.AllArgsConstructor;
@@ -61,9 +57,14 @@ public class UserDtoService {
         return UserDtoConverter.convertToDto(optionalUser.get(), DOWN);
     }
 
-    public UserDto patchUser(String username, UserDto userDto) throws UserNotFoundException {
+    public UserDto patchUser(String username, UserDto userDto) throws UserNotFoundException, RoleNotFoundException, DepartmentNotFoundException {
         User user = UserDtoConverter.convertToEntity(userDto, DOWN);
         return UserDtoConverter.convertToDto(userService.patchUser(username, user), DOWN);
+    }
+
+
+    public void deleteUser(Integer id) {
+        userService.deleteUser(id);
     }
 
 }

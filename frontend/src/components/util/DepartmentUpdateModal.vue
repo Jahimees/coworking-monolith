@@ -152,7 +152,7 @@ function returnIdCallback(id) {
                   <label>{{ labels.USER_FULLNAME }}</label>
 
                   <SearchSelect :options="props.usersMap" @return-id="returnIdCallback"
-                                :default-value="{id: props.data[2], name: props.data[3]}"/>
+                                :default-value="{id: props.data[1], name: props.data[2]}"/>
                 </div>
               </div>
               <div>
