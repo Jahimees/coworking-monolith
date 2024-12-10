@@ -1,8 +1,10 @@
 package by.bsuir.antonovich.backend.controller.rest;
 
 import by.bsuir.antonovich.backend.data.dto.DepartmentDto;
+import by.bsuir.antonovich.backend.exception.DepartmentNotFoundException;
 import by.bsuir.antonovich.backend.service.dto.DepartmentDtoService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,5 +45,16 @@ public class DepartmentRestController {
         }
 
         return ResponseEntity.ok(departmentDtoService.patch(departmentDto));
+    }
+
+    @DeleteMapping("/{departmentId}")
+    public ResponseEntity<?> deleteDepartment(@PathVariable Integer departmentId) {
+        try {
+            departmentDtoService.deleteAndSetNullDepartmentForUsers(departmentId);
+
+            return ResponseEntity.ok().build();
+        } catch (DepartmentNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

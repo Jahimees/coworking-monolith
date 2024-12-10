@@ -360,8 +360,6 @@ function setDepartmentId(id) {
                 aria-label="Close modal">
               Отменить
             </button>
-
-            {{ props.action }}
           </slot>
         </footer>
       </div>
@@ -390,10 +388,6 @@ function setDepartmentId(id) {
 
 #modal-box > div > div > div {
   margin: auto 0 0 auto
-}
-
-.confirm-deletion {
-  background-color: red;
 }
 
 </style>

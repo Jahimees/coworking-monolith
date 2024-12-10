@@ -4,7 +4,7 @@
 
 <template>
   <div class="view-header">
-    Управление офисами
+    Бронирование переговорных
   </div>
 </template>
 

@@ -65,9 +65,9 @@ function fillTable(departmentsJson) {
 
   departmentsJson.forEach((department) => {
     let bossFullName = ""
-    let bossId
-    if (department.user != null && typeof department.user !== "undefined") {
-      let user = department.user;
+    let bossId = ""
+    if (department.boss != null && typeof department.boss !== "undefined") {
+      let user = department.boss;
       bossFullName = ((user.lastName != null ? user.lastName : " ") + " " +
           (user.firstName != null ? user.firstName : " ") + " " +
           (user.middleName != null ? user.middleName : ""));
@@ -101,7 +101,7 @@ async function createDepartment() {
 
   let json = {
     name: newDepartmentName.value,
-    user: {
+    boss: {
       id: selectedUserId.value
     }
   }
@@ -136,7 +136,6 @@ const infoTitle = ref("")
 const infoMessage = ref("")
 
 function reloadTable() {
-  console.log("RELOAD")
   DataTableUtils.destroyDataTable("departments")
   initDataTable()
 }

@@ -15,6 +15,10 @@ public final class DepartmentDtoConverter {
         department.setId(dto.getId());
         department.setName(dto.getName());
 
+        if (dto.getBoss() != null) {
+            department.setBoss(UserDtoConverter.convertToEntity(dto.getBoss(), direction));
+        }
+
         return department;
     }
 
@@ -23,6 +27,10 @@ public final class DepartmentDtoConverter {
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());
+
+        if (entity.getBoss() != null) {
+            dto.setBoss(UserDtoConverter.convertToDto(entity.getBoss(), direction));
+        }
 
         return dto;
     }

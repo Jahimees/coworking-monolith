@@ -31,7 +31,13 @@ async function initDataTable() {
       .then(json => {
         users = json
       })
-
+  //
+  if (!DataTable.isDataTable('#users')) {
+    let $dataTable = new DataTable('#users_table');
+    $dataTable.data().clear();
+    $dataTable.destroy();
+    console.log("DESTRYO")
+  }
   DataTableUtils.initDataTable("users", columnDefs)
 
   const $dataTable = fillTable(users)
@@ -59,14 +65,12 @@ function fillTable(usersJson) {
 
     const username = user.username.trim();
     const email = user.email.trim();
-    const department = user.department != null ? user.department.name : "";
-    const departmentId = user.department != null ? user.department.id : ""
-    const role = user.roles != null ? user.roles[0].name : ""
-    const roleId = user.roles != null ? user.roles[0].id : ""
-    const workSpace = user.workSpace != null ? user.workSpace : ""
+    const department = user.department != null ? user.department.name : " ";
+    const departmentId = user.department != null ? user.department.id : " "
+    const role = user.roles != null ? user.roles[0].name : " "
+    const roleId = user.roles != null ? user.roles[0].id : " "
+    const workSpace = user.workSpace != null ? user.workSpace : " "
     const id = user.id;
-
-    console.log(user)
 
     $dataTable.row.add([
       id,
@@ -77,7 +81,7 @@ function fillTable(usersJson) {
       department,
       roleId,
       role,
-      "",
+      "WID ",
       workSpace,
     ]).draw(false)
   })
@@ -102,7 +106,6 @@ function openEditUserModal() {
 function openCreateUserModal() {
   isEditUserModalVisible.value = true
   modalAction.value = 'create'
-  console.log(modalAction.value)
   console.log("modalAction")
   clickedRowData.value = ["", "", "", "", "", "", "", "", ""]
 }
@@ -178,18 +181,19 @@ function loadWorkspaces() {
     <table id="users_table" class="display">
       <thead>
       <tr>
-        <th style="display: none">id</th>
+        <th>id</th>
         <th>ФИО</th>
         <th>Имя пользователя</th>
         <th>Email</th>
-        <th style="display: none">departmentId</th>
+        <th>departmentId</th>
         <th>Отдел</th>
-        <th style="display: none">roleId</th>
+        <th>roleId</th>
         <th>Роль</th>
-        <th style="display: none">workspaceId</th>
+        <th>workspaceId</th>
         <th>Рабочее место</th>
       </tr>
       </thead>
+      <tbody></tbody>
     </table>
     <button @click="openCreateUserModal">Создать пользователя</button>
   </div>

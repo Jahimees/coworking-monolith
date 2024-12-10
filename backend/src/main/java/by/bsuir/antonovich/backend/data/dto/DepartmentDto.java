@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DepartmentDto implements DtoEntity {
 
+    public DepartmentDto(Integer id) {
+        this.id = id;
+    }
+
     private Integer id;
     private String name;
+    private UserDto boss;
 }

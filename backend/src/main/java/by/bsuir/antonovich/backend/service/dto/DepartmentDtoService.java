@@ -2,6 +2,7 @@ package by.bsuir.antonovich.backend.service.dto;
 
 import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.dto.DepartmentDto;
+import by.bsuir.antonovich.backend.exception.DepartmentNotFoundException;
 import by.bsuir.antonovich.backend.service.DepartmentService;
 import by.bsuir.antonovich.backend.service.converter.DepartmentDtoConverter;
 import by.bsuir.antonovich.backend.service.converter.Direction;
@@ -38,10 +39,14 @@ public class DepartmentDtoService {
 
     public DepartmentDto patch(DepartmentDto departmentDto) {
 
-        Department department = DepartmentDtoConverter.convertToEntity(departmentDto, Direction.DOWN);
+        Department department = DepartmentDtoConverter.convertToEntity(departmentDto, Direction.UP);
 
         Department updatedDepartment = departmentService.patch(department);
 
-        return DepartmentDtoConverter.convertToDto(updatedDepartment, Direction.DOWN);
+        return DepartmentDtoConverter.convertToDto(updatedDepartment, Direction.UP);
+    }
+
+    public void deleteAndSetNullDepartmentForUsers(Integer departmentId) throws DepartmentNotFoundException {
+        departmentService.deleteAndSetNullDepartmentForUsers(departmentId);
     }
 }

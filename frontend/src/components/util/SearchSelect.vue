@@ -49,20 +49,22 @@ const closeDropDownAndSelect = () => {
 }
 
 onMounted(() => {
-  let observer = new MutationObserver(() => {
-    console.log($props.defaultValue)
-    console.log($props.options[0])
-    if ($props.defaultValue != null && typeof $props.defaultValue !== "undefined"
-        && $props.defaultValue.id !== '' && typeof $props.defaultValue.id !== "undefined") {
-      selectOption($props.defaultValue)
-    } else {
-      selectOption($props.options[0])
-    }
-  })
+  if (typeof $(".modal-backdrop")[0] !== "undefined") {
+    let observer = new MutationObserver(() => {
+      console.log($props.defaultValue)
+      console.log($props.options[0])
+      if ($props.defaultValue != null && typeof $props.defaultValue !== "undefined"
+          && $props.defaultValue.id !== '' && typeof $props.defaultValue.id !== "undefined") {
+        selectOption($props.defaultValue)
+      } else {
+        selectOption($props.options[0])
+      }
+    })
 
-  observer.observe($(".modal-backdrop")[0], {
-    attributes: true
-  })
+    observer.observe($(".modal-backdrop")[0], {
+      attributes: true
+    })
+  }
 })
 
 </script>

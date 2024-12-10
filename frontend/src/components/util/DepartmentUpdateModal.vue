@@ -56,7 +56,7 @@ function updateDepartment() {
   let jsonObj = {
     id: id,
     name: name,
-    user: {
+    boss: {
       id: userId
     }
   }
@@ -72,12 +72,10 @@ function updateDepartment() {
       .then(json => {
             $emit('success')
             $emit('reloadTable')
-            console.log(json)
           }
       )
       .catch((err) => {
         $emit("fail")
-
         console.log(err)
       })
 
@@ -100,7 +98,30 @@ function validateFields() {
   return isDepartmentIdCorrect.value && isDepartmentNameCorrect.value
 }
 
+const isDeleteConfirmation = ref(false)
+
 function deleteDepartment() {
+  isDeleteConfirmation.value = true
+}
+
+function confirmDeleteDepartment() {
+  let id = props.data[0]
+
+  fetch(url + "/" + id, {
+    method: "DELETE",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+      .then(data => {
+            $emit('success', "Пользователь успешно удален")
+            $emit('reloadTable')
+          }
+      )
+      .catch(ev => {
+        $emit('fail', ev)
+      })
+
   close()
 }
 
@@ -197,6 +218,14 @@ function returnIdCallback(id) {
                 @click="deleteDepartment"
                 aria-label="Delete modal">
               Удалить
+            </button>
+            <button
+                class="confirm-deletion"
+                type="button"
+                @click="confirmDeleteDepartment"
+                aria-label="Delete modal"
+                v-if="isDeleteConfirmation">
+              Подтвердить удаление
             </button>
             <button
                 type="button"

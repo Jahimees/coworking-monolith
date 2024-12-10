@@ -1,8 +1,10 @@
 package by.bsuir.antonovich.backend.service.converter;
 
+import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.Office;
 import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.User;
+import by.bsuir.antonovich.backend.data.dto.DepartmentDto;
 import by.bsuir.antonovich.backend.data.dto.RoleDto;
 import by.bsuir.antonovich.backend.data.dto.UserDto;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +26,11 @@ public class UserDtoConverter {
         userDto.setMiddleName(user.getMiddleName());
 
         if (user.getDepartment() != null) {
-            userDto.setDepartment(DepartmentDtoConverter.convertToDto(user.getDepartment(), direction));
+            if (direction != Direction.UP) {
+                userDto.setDepartment(DepartmentDtoConverter.convertToDto(user.getDepartment(), direction));
+            } else {
+                userDto.setDepartment(new DepartmentDto(user.getDepartment().getId()));
+            }
         }
 
         List<RoleDto> roleDtoList = new ArrayList<>();
@@ -52,7 +58,11 @@ public class UserDtoConverter {
         user.setMiddleName(userDto.getMiddleName());
 
         if (userDto.getDepartment() != null) {
-            user.setDepartment(DepartmentDtoConverter.convertToEntity(userDto.getDepartment(), direction));
+            if (direction != Direction.UP) {
+                user.setDepartment(DepartmentDtoConverter.convertToEntity(userDto.getDepartment(), direction));
+            } else {
+                user.setDepartment(new Department(userDto.getDepartment().getId()));
+            }
         }
 
         if (userDto.getWorkSpace() != null) {

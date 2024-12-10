@@ -2,7 +2,9 @@ package by.bsuir.antonovich.backend.service;
 
 import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.User;
+import by.bsuir.antonovich.backend.exception.DepartmentNotFoundException;
 import by.bsuir.antonovich.backend.repository.DepartmentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +27,14 @@ public class DepartmentService {
 
         if (department.getName() != null && !department.getName().isEmpty()) {
             newDepartment.setName(department.getName());
-
         } else {
             throw new IllegalArgumentException("Department name cannot be null");
+        }
+
+        if (department.getBoss() != null && department.getBoss().getId() != null) {
+            Optional<User> dbBoss = userService.getById(department.getBoss().getId());
+
+            dbBoss.ifPresent(newDepartment::setBoss);
         }
 
         return departmentRepository.save(newDepartment);
@@ -50,10 +57,32 @@ public class DepartmentService {
             newDepartment.setName(department.getName());
         }
 
+        if (department.getBoss() != null && department.getBoss().getId() != null) {
+            Optional<User> dbBossOptional = userService.getById(department.getBoss().getId());
+
+            dbBossOptional.ifPresent(newDepartment::setBoss);
+        }
+
         return departmentRepository.save(newDepartment);
     }
 
     public Optional<Department> findById(Integer id) {
         return departmentRepository.findById(id);
+    }
+
+    @Transactional
+    public void deleteAndSetNullDepartmentForUsers(Integer id) throws DepartmentNotFoundException {
+        Optional<Department> departmentOptional = departmentRepository.findById(id);
+
+        if (departmentOptional.isEmpty()) {
+            throw new DepartmentNotFoundException("Department with id %s not found".formatted(id));
+        }
+
+        Department dbDepartment = departmentOptional.get();
+
+        List<User> departmentUsers = userService.findAllByDepartment(dbDepartment);
+        userService.setNullDepartmentForUsers(departmentUsers);
+
+        departmentRepository.delete(dbDepartment);
     }
 }

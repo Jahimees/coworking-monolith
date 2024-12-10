@@ -6,7 +6,6 @@
 
 .inline-block {
     display: inline-flex;
-    width: 100%;
 }
 
 .m-b-3em {
@@ -29,4 +28,8 @@
 .p-tb-3em {
     padding-top: 3em;
     padding-bottom: 3em;
+}
+
+.confirm-deletion {
+    background-color: red;
 }

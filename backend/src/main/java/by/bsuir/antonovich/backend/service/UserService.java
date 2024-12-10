@@ -3,7 +3,12 @@ package by.bsuir.antonovich.backend.service;
 import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.User;
-import by.bsuir.antonovich.backend.exception.*;
+import by.bsuir.antonovich.backend.exception.DepartmentNotFoundException;
+import by.bsuir.antonovich.backend.exception.EmailAlreadyExistsException;
+import by.bsuir.antonovich.backend.exception.NotEnoughRegistrationData;
+import by.bsuir.antonovich.backend.exception.RoleNotFoundException;
+import by.bsuir.antonovich.backend.exception.UserNotFoundException;
+import by.bsuir.antonovich.backend.exception.UsernameAlreadyExistsException;
 import by.bsuir.antonovich.backend.repository.DepartmentRepository;
 import by.bsuir.antonovich.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -14,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -138,6 +144,22 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    protected List<User> findAllByDepartment(Department department) {
+        return userRepository.findAllByDepartment(department);
+    }
+
+    protected List<User> setNullDepartmentForUsers(List<User> users) {
+
+        List<User> newUsers = new ArrayList<>();
+
+        users.forEach(user -> {
+            user.setDepartment(null);
+            newUsers.add(userRepository.save(user));
+        });
+
+        return newUsers;
     }
 
 }
