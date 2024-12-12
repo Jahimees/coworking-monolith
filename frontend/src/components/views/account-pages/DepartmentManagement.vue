@@ -54,7 +54,7 @@ async function initDataTable() {
 }
 
 function initCellClickEventListener($dataTable) {
-  $dataTable.on('click', 'tbody tr', function () {
+  $dataTable.off('click').on('click', 'tbody tr', function () {
     clickedRowData.value = $dataTable.row(this).data();
     openEditDepartmentModal()
   });
@@ -217,7 +217,8 @@ function closeInfoModal() {
   <InfoModal v-show="isInfoModalVisible"
              :title="infoTitle"
              :message="infoMessage"
-             @close="closeInfoModal"/>
+             @close="closeInfoModal"
+             @confirm="closeInfoModal"/>
 </template>
 
 <style scoped>

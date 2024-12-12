@@ -27,7 +27,7 @@ public class Floor implements SimpleEntity {
     @JoinColumn(name = "office_id")
     private Office office;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "floor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "floor", cascade = CascadeType.ALL)
     private List<Room> rooms;
 
     public Floor(final Integer id) {

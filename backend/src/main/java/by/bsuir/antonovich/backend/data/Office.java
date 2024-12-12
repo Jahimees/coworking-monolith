@@ -23,7 +23,7 @@ public class Office implements SimpleEntity {
     @Column(name = "address")
     private String address;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "offices_owners",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -31,7 +31,7 @@ public class Office implements SimpleEntity {
     )
     private List<User> userOwnerList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "office")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "office", cascade = CascadeType.ALL)
     private List<Floor> floors;
 
     public Office(Integer id) {

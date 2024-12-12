@@ -38,4 +38,8 @@ public class OfficeDtoService {
 
         return OfficeDtoConverter.convertToDto(updatedOffice, Direction.DOWN);
     }
+
+    public void deleteOffice(Integer officeId) {
+        officeService.deleteById(officeId);
+    }
 }

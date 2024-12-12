@@ -34,7 +34,7 @@ public class Room implements SimpleEntity {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "room")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "room", cascade = CascadeType.ALL)
     private List<WorkSpace> workSpaces;
 
     @ManyToOne(fetch = FetchType.LAZY)

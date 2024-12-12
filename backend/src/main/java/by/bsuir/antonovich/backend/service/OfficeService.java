@@ -2,6 +2,7 @@ package by.bsuir.antonovich.backend.service;
 
 import by.bsuir.antonovich.backend.data.Office;
 import by.bsuir.antonovich.backend.repository.OfficeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,14 @@ public class OfficeService {
 
     public Optional<Office> findById(Integer id) {
         return officeRepository.findById(id);
+    }
+
+    @Transactional
+    public void deleteById(Integer id) {
+
+        officeRepository.deleteById(id);
+//        TODO booking deletion
+        //delete floor
+        //delete rooms
     }
 }

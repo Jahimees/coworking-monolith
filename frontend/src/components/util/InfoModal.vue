@@ -1,6 +1,6 @@
 <script setup>
 
-const $emits = defineEmits(['close'])
+const $emits = defineEmits(['close', 'confirm'])
 
 defineProps({
   title: {
@@ -17,6 +17,10 @@ defineProps({
 
 function close() {
   $emits('close')
+}
+
+function confirm() {
+  $emits('confirm')
 }
 
 </script>
@@ -53,6 +57,12 @@ function close() {
         </section>
         <footer class="modal-footer">
           <slot name="footer">
+            <button
+                type="button"
+                @click="confirm"
+                aria-label="Close modal">
+              Ок
+            </button>
             <button
                 type="button"
                 @click="close"
