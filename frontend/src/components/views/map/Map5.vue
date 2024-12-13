@@ -6,7 +6,7 @@ import Utils from "@/scripts/Utils.js";
 const scale = 20; // Коэффициент масштабирования
 const rooms = ref([]); // Список помещений
 const selectedRoom = ref(null); // Выбранное помещение
-const selectedWorkplace = ref(null); // Выбранное рабочее место
+const selectedWorkspace = ref(null); // Выбранное рабочее место
 
 const props = defineProps({
   mapData: {
@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(["updateRooms", "roomSelected", "workspaceSelected", "deselectAll"]);
+const emits = defineEmits(["updateRooms", "roomSelected", "workspaceSelected", "deselectAll", "returnRooms"]);
 
 // Добавление нового помещения
 function addRoom() {
@@ -30,38 +30,43 @@ function addRoom() {
     x: 10,
     y: 10,
     color: 'lightgray',
-    workplaces: [], // Рабочие места внутри помещения
+    workspaces: [], // Рабочие места внутри помещения
   };
   rooms.value.push(newRoom);
   initializeRoomDrag(newRoom);
 }
 
+function getRooms() {
+  emits('returnRooms', rooms)
+}
+
 defineExpose({
-  addRoom
+  addRoom,
+  getRooms
 })
 
 // Добавление рабочего места
-const addWorkplace = () => {
+const addWorkspace = () => {
   if (selectedRoom.value) {
-    const newWorkplace = {
+    const newWorkspace = {
       id: Date.now(),
-      name: `WP ${selectedRoom.value.workplaces.length + 1}`,
+      name: `WP ${selectedRoom.value.workspaces.length + 1}`,
       x: scale,
       y: scale,
       roomId: selectedRoom.value.id
     };
-    selectedRoom.value.workplaces.push(newWorkplace);
-    initializeWorkplaceDrag(selectedRoom.value, newWorkplace);
+    selectedRoom.value.workspaces.push(newWorkspace);
+    initializeWorkspaceDrag(selectedRoom.value, newWorkspace);
   }
 };
 
 // Удаление выбранного рабочего места
-const deleteWorkplace = () => {
-  if (selectedRoom.value && selectedWorkplace.value) {
-    selectedRoom.value.workplaces = selectedRoom.value.workplaces.filter(
-        (wp) => wp.id !== selectedWorkplace.value.id
+const deleteWorkspace = () => {
+  if (selectedRoom.value && selectedWorkspace.value) {
+    selectedRoom.value.workspaces = selectedRoom.value.workspaces.filter(
+        (wp) => wp.id !== selectedWorkspace.value.id
     );
-    selectedWorkplace.value = null;
+    selectedWorkspace.value = null;
   }
 };
 
@@ -121,13 +126,13 @@ const initializeRoomDrag = (room) => {
 };
 
 // Инициализация драг-н-дропа для рабочего места
-const initializeWorkplaceDrag = (room, workplace) => {
-  interact(`#wp-${workplace.id}`).draggable({
+const initializeWorkspaceDrag = (room, workspace) => {
+  interact(`#wp-${workspace.id}`).draggable({
     listeners: {
       move(event) {
-        const wpIndex = room.workplaces.findIndex((wp) => wp.id === workplace.id);
+        const wpIndex = room.workspaces.findIndex((wp) => wp.id === workspace.id);
         if (wpIndex !== -1) {
-          const wp = room.workplaces[wpIndex];
+          const wp = room.workspaces[wpIndex];
 
           // Новые координаты рабочего места
           const newX = wp.x + event.dx;
@@ -138,7 +143,7 @@ const initializeWorkplaceDrag = (room, workplace) => {
           wp.x = Math.max(-room.width * scale / 2, Math.min(newX, room.width * scale / 2));
           wp.y = Math.max(-room.height * scale / 2, Math.min(newY, room.height * scale / 2));
 
-          const wpElement = document.getElementById(`wp-${workplace.id}`);
+          const wpElement = document.getElementById(`wp-${workspace.id}`);
           wpElement.style.transform = `translate(${wp.x}px, ${wp.y}px)`;
         }
       },
@@ -157,13 +162,13 @@ const renderFromJSON = (json) => {
         y: room.y,
         width: room.width,
         height: room.height,
-        workplaces: room.workplaces || [],
+        workspaces: room.workspaces || [],
       }));
 
       // Применяем интерактивность для всех элементов
       rooms.value.forEach((room) => {
         initializeRoomDrag(room);
-        room.workplaces.forEach((wp) => initializeWorkplaceDrag(room, wp));
+        room.workspaces.forEach((wp) => initializeWorkspaceDrag(room, wp));
       });
     }
   }
@@ -173,8 +178,8 @@ const renderFromJSON = (json) => {
 renderFromJSON();
 
 const selectRoom = (room) => {
-  if (selectedWorkplace.value != null &&
-      room.id !== selectedWorkplace.value.roomId) {
+  if (selectedWorkspace.value != null &&
+      room.id !== selectedWorkspace.value.roomId) {
     deselectAll()
   }
 
@@ -183,7 +188,7 @@ const selectRoom = (room) => {
 }
 
 const selectWorkspace = (workspace) => {
-  selectedWorkplace.value = workspace
+  selectedWorkspace.value = workspace
   if (workspace != null) {
     rooms.value.forEach(room => {
       if (room.id === workspace.roomId) {
@@ -223,16 +228,16 @@ const deselectAll = () => {
 
       <!-- Рабочие места внутри комнаты -->
       <div
-          v-for="wp in room.workplaces"
+          v-for="wp in room.workspaces"
           :key="wp.id"
           :id="'wp-' + wp.id"
-          class="workplace"
+          class="workspace"
           :style="{
           width: '30px',
           height: '30px',
           backgroundColor: 'blue',
           border: '1px solid',
-          borderColor: wp === selectedWorkplace ? 'yellow' : 'black',
+          borderColor: wp === selectedWorkspace ? 'yellow' : 'black',
           position: 'absolute',
           transform: `translate(${wp.x}px, ${wp.y}px)`,
         }"
@@ -245,10 +250,10 @@ const deselectAll = () => {
     <!-- Панель управления -->
     <div class="controls">
       ROOM: {{ selectedRoom }}
-      WORKSPACE: {{ selectedWorkplace }}
+      WORKSPACE: {{ selectedWorkspace }}
       <button @click="addRoom">Добавить помещение</button>
-      <button @click="addWorkplace" :disabled="!selectedRoom">Добавить рабочее место</button>
-      <button @click="deleteWorkplace" :disabled="!selectedWorkplace">Удалить рабочее место</button>
+      <button @click="addWorkspace" :disabled="!selectedRoom">Добавить рабочее место</button>
+      <button @click="deleteWorkspace" :disabled="!selectedWorkspace">Удалить рабочее место</button>
       <button @click="deleteRoom">Удалить Комнату</button>
       <button @click="deselectAll">Убрать выделение</button>
     </div>
@@ -277,7 +282,7 @@ const deselectAll = () => {
   user-select: none;
 }
 
-.workplace {
+.workspace {
   border-radius: 50%;
   cursor: move;
   color: white;

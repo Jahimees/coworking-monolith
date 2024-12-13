@@ -30,6 +30,12 @@ public class WorkSpace implements SimpleEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @Column(name = "x")
+    private Double x;
+
+    @Column(name = "y")
+    private Double y;
+
     public WorkSpace(final Integer id) {
         this.id = id;
     }

@@ -3,8 +3,11 @@
 import InteractiveMapTab from "@/components/views/account-pages/office/InteractiveMapTab.vue";
 import OfficeManagementTab from "@/components/views/account-pages/office/OfficeManagementTab.vue";
 import {onMounted, ref} from "vue";
+import StatusesAndTypesManagementTab from "@/components/views/account-pages/office/StatusesAndTypesManagementTab.vue";
 
 const isInteractiveMap = ref(true)
+const isOfficeManagement = ref(false)
+const isStatusesAndTypes = ref(false)
 
 onMounted(() => {
 
@@ -19,10 +22,20 @@ onMounted(() => {
     switch (e.currentTarget.id) {
       case "interactive-map-tab": {
         isInteractiveMap.value = true
+        isOfficeManagement.value = false
+        isStatusesAndTypes.value = false
         break
       }
       case "office-management-tab": {
         isInteractiveMap.value = false
+        isOfficeManagement.value = true
+        isStatusesAndTypes.value = false
+        break
+      }
+      case "statuses-types-tab": {
+        isInteractiveMap.value = false
+        isOfficeManagement.value = false
+        isStatusesAndTypes.value = true
         break
       }
     }
@@ -41,13 +54,17 @@ onMounted(() => {
     <div class="tab-menu">
       <button id="interactive-map-tab" class="tab-button select">Интерактивная карта</button>
       <button id="office-management-tab" class="tab-button">Управление офисами</button>
+      <button id="statuses-types-tab" class="tab-button">Управление типами и статусами</button>
     </div>
     <div class="content-container">
       <div id="interactive-map-tab-container" v-if="isInteractiveMap">
         <InteractiveMapTab/>
       </div>
-      <div id="office-management-tab-container" v-if="!isInteractiveMap">
+      <div id="office-management-tab-container" v-if="isOfficeManagement">
         <OfficeManagementTab/>
+      </div>
+      <div id="office-management-tab-container" v-if="isStatusesAndTypes">
+        <StatusesAndTypesManagementTab/>
       </div>
     </div>
   </div>

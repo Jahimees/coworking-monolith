@@ -16,6 +16,13 @@ const isDropdownOpen = ref(false);
 const selectedOption = ref($props.defaultValue);
 const selectedId = ref(null);
 
+watch(() => $props.options, async () => {
+  options.value = $props.options
+  selectedOption.value = null;
+  searchQuery.value = ""
+  selectedId.value = null
+})
+
 watch(() => selectedOption, async (selectedOption1) => {
   searchQuery.value = selectedOption1.name
   selectedId.value = selectedOption1.id
@@ -24,27 +31,33 @@ watch(() => selectedOption, async (selectedOption1) => {
 // Фильтрация опций на основе поискового запроса
 const filteredOptions = computed(() =>
     options.value.filter((option) =>
-        option.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        option.name.toLowerCase().includes(searchQuery.value?.toLowerCase())
     )
 );
 
 const selectOption = (option) => {
 
+  console.log(option)
   selectedOption.value = option;
   searchQuery.value = option?.name
   selectedId.value = option?.id
+
+  isDropdownOpen.value = false
 
   $emits('returnId', selectedId.value)
 };
 
 const closeDropDownAndSelect = () => {
   setTimeout(() => {
-    searchQuery.value = selectedOption.value.name
-    selectedId.value = selectedOption.value.id
 
-    $emits('returnId', selectedId.value)
+    if (typeof selectedOption.value !== "undefined") {
+      searchQuery.value = selectedOption.value.name
+      selectedId.value = selectedOption.value.id
 
-    isDropdownOpen.value = false;
+      $emits('returnId', selectedId.value)
+
+      isDropdownOpen.value = false;
+    }
   }, 100)
 }
 

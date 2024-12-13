@@ -15,6 +15,8 @@ public final class WorkSpaceDtoConverter {
 
         workSpace.setId(dto.getId());
         workSpace.setName(dto.getName());
+        workSpace.setX(dto.getX());
+        workSpace.setY(dto.getY());
 
         if (dto.getRoom() != null) {
             workSpace.setRoom(direction == DOWN
@@ -31,6 +33,8 @@ public final class WorkSpaceDtoConverter {
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());
+        dto.setX(entity.getX());
+        dto.setY(entity.getY());
 
         if (entity.getRoom() != null) {
             dto.setRoom(direction == DOWN

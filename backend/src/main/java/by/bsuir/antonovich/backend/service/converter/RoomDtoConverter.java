@@ -22,6 +22,8 @@ public final class RoomDtoConverter {
         room.setName(dto.getName());
         room.setWidth(dto.getWidth());
         room.setLength(dto.getLength());
+        room.setX(dto.getX());
+        room.setY(dto.getY());
 
         if (dto.getDepartment() != null) {
             room.setDepartment(DepartmentDtoConverter.convertToEntity(dto.getDepartment(), direction));
@@ -29,6 +31,10 @@ public final class RoomDtoConverter {
 
         if (dto.getRoomType() != null) {
             room.setRoomType(RoomTypeDtoConverter.convertToEntity(dto.getRoomType(), direction));
+        }
+
+        if (dto.getRoomStatus() != null) {
+            room.setRoomStatus(RoomStatusDtoConverter.convertToEntity(dto.getRoomStatus(), direction));
         }
 
         if (dto.getFloor() != null) {
@@ -44,7 +50,7 @@ public final class RoomDtoConverter {
                             ? WorkSpaceDtoConverter.convertToEntity(workSpace, direction)
                             : WorkSpaceDtoConverter.convertToEntityIdOnly(workSpace)));
 
-            room.setWorkSpaces(workSpaceList);
+            room.setWorkspaces(workSpaceList);
         }
 
 
@@ -58,6 +64,8 @@ public final class RoomDtoConverter {
         roomDto.setName(entity.getName());
         roomDto.setWidth(entity.getWidth());
         roomDto.setLength(entity.getLength());
+        roomDto.setX(entity.getX());
+        roomDto.setY(entity.getY());
 
         if (entity.getDepartment() != null) {
             roomDto.setDepartment(DepartmentDtoConverter.convertToDto(entity.getDepartment(), direction));
@@ -67,6 +75,10 @@ public final class RoomDtoConverter {
             roomDto.setRoomType(RoomTypeDtoConverter.convertToDto(entity.getRoomType(), direction));
         }
 
+        if (entity.getRoomStatus() != null) {
+            roomDto.setRoomStatus(RoomStatusDtoConverter.convertToDto(entity.getRoomStatus(), direction));
+        }
+
         if (entity.getFloor() != null) {
             roomDto.setFloor(direction == DOWN
                     ? FloorDtoConverter.convertToDtoIdOnly(entity.getFloor())
@@ -74,9 +86,9 @@ public final class RoomDtoConverter {
             );
         }
 
-        if (entity.getWorkSpaces() != null) {
+        if (entity.getWorkspaces() != null) {
             List<WorkSpaceDto> workSpaceDtoList = new ArrayList<>();
-            entity.getWorkSpaces().forEach(workSpace ->
+            entity.getWorkspaces().forEach(workSpace ->
                     workSpaceDtoList.add(direction == DOWN
                             ? WorkSpaceDtoConverter.convertToDto(workSpace, direction)
                             : WorkSpaceDtoConverter.convertToDtoIdOnly(workSpace)));

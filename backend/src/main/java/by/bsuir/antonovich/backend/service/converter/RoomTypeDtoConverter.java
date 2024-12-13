@@ -13,6 +13,7 @@ public final class RoomTypeDtoConverter {
 
         roomType.setId(dto.getId());
         roomType.setName(dto.getName());
+        roomType.setColor(dto.getColor());
 
         return roomType;
     }
@@ -22,6 +23,7 @@ public final class RoomTypeDtoConverter {
 
         roomTypeDto.setId(entity.getId());
         roomTypeDto.setName(entity.getName());
+        roomTypeDto.setColor(entity.getColor());
 
         return roomTypeDto;
     }

@@ -26,16 +26,26 @@ public class Room implements SimpleEntity {
     @Column(name = "width")
     private Double width;
 
+    @Column(name = "x")
+    private Double x;
+
+    @Column(name = "y")
+    private Double y;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_status_id")
+    private RoomStatus roomStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "room", cascade = CascadeType.ALL)
-    private List<WorkSpace> workSpaces;
+    private List<WorkSpace> workspaces;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id")

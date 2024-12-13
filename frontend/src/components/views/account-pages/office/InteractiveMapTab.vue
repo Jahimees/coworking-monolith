@@ -2,8 +2,7 @@
 
 import SearchSelect from "@/components/util/SearchSelect.vue";
 import Map5 from "@/components/views/map/Map5.vue";
-import {ref} from "vue";
-import {map} from "@jsplumb/browser-ui";
+import {onMounted, ref} from "vue";
 
 const selectedRoom = ref(null)
 const selectedWorkspace = ref(null)
@@ -63,7 +62,7 @@ function onDeselectAll() {
 
 }
 
-const exampleJSON = `
+const exampleJSON = ref(`
 {
   "rooms": [
     {
@@ -81,7 +80,138 @@ const exampleJSON = `
     }
   ]
 }
-`;
+`);
+
+//////////////////////SELECT FIELDS/////////////////////
+
+///////////////////OFFICE//////////////////
+
+onMounted(() => {
+  loadOffices();
+})
+
+const offices = ref([])
+const floors = ref([])
+
+const officesSearchMap = []
+let floorsSearchMap = ref([])
+
+const selectedOfficeSearch = ref(null)
+const selectedFloorSearch = ref(null)
+
+const officesUrl = "http://localhost:8080/api/v1/offices"
+const floorsUrl = "http://localhost:8080/api/v1/floors"
+
+async function loadOffices() {
+  // officesSearchMap.value = []
+
+  await fetch(officesUrl, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+      .then(data => data.json())
+      .then(json => {
+        offices.value = json
+      })
+
+  officesSearchMap.push({id: -1, name: "Не выбран"})
+
+  offices.value.forEach(office => {
+    officesSearchMap.push({id: office.id, name: office.name})
+  })
+}
+
+function onOfficeSearchChosen(officeId) {
+
+  if (officeId === -1) {
+    selectedOfficeSearch.value = null
+    selectedFloorSearch.value = null;
+    loadFloorsSearch()
+
+    return
+  }
+
+  offices.value.forEach(office => {
+    if (office.id === officeId) {
+      selectedOfficeSearch.value = office
+      floors.value = office.floors
+      loadFloorsSearch()
+
+      return
+    }
+  })
+}
+
+function loadFloorsSearch() {
+  floorsSearchMap.value = []
+
+  floors.value.forEach((floor) => {
+    floorsSearchMap.value.push({id: floor.id, name: floor.name})
+  })
+}
+
+const isOfficeChosen = ref(true)
+const isFloorChosen = ref(true)
+
+function loadMap() {
+  validateOfficeAndFloor()
+
+  if (selectedFloor.value.rooms.length === 0) {
+    console.log("NULL")
+  } else {
+
+  }
+}
+
+function retrieveMapValues() {
+  mapRef.value.getRooms();
+}
+
+function saveMap(rooms) {
+  console.log(rooms)
+}
+
+// {
+  //   "rooms": [
+  //   {
+  //     "id": 1,
+  //     "name": "Room A",
+  //     "x": 10,
+  //     "y": 10,
+  //     "width": 10,
+  //     "height": 10,
+  //     "color": "red",
+  //     "workplaces": [
+  //       { "id": 101, "name": "WP 1", "x": 1, "y": 1, "roomId": 1 },
+  //       { "id": 102, "name": "WP 2", "x": 3, "y": 2, "roomId": 1 }
+  //     ]
+  //   }
+  // ]
+  // }
+
+function validateOfficeAndFloor() {
+
+  isOfficeChosen.value = typeof selectedOfficeSearch.value !== "undefined" &&
+      selectedOfficeSearch.value !== null &&
+      selectedOfficeSearch.value.id !== -1
+
+  isFloorChosen.value = typeof selectedFloorSearch.value !== "undefined" &&
+      selectedFloorSearch.value !== null &&
+      selectedFloorSearch.value.id !== -1
+
+  return isOfficeChosen.value && isFloorChosen.value
+}
+
+function onFloorSearchChosen(floorId) {
+  floors.value.forEach(floor => {
+    if (floor.id === floorId) {
+      selectedFloorSearch.value = floor
+      selectedFloor.value = floor
+    }
+  })
+}
+
 </script>
 
 <template>
@@ -89,14 +219,20 @@ const exampleJSON = `
     <div class="search-select-container" style="display: flex">
       <div class="search-select-item">
         <label>Выбрать офис</label>
-        <SearchSelect/>
+        <div>
+          <label class="err-label" v-if="!isOfficeChosen">Выберите офис</label>
+        </div>
+        <SearchSelect :options="officesSearchMap" @return-id="onOfficeSearchChosen"/>
       </div>
       <div class="search-select-item">
         <label>Выбрать этаж</label>
-        <SearchSelect/>
+        <div>
+          <label class="err-label" v-if="!isFloorChosen">Выберите этаж</label>
+        </div>
+        <SearchSelect :options="floorsSearchMap" @return-id="onFloorSearchChosen"/>
       </div>
-      <button class="map-management-btn">Загрузить карту</button>
-      <button class="map-management-btn" style="margin: auto 0 0 10px;">Сохранить карту</button>
+      <button class="map-management-btn" @click="loadMap">Загрузить карту</button>
+      <button class="map-management-btn" style="margin: auto 0 0 10px;" @click="retrieveMapValues">Сохранить карту</button>
     </div>
   </div>
   <div class="work-flow row">
@@ -144,11 +280,12 @@ const exampleJSON = `
     </div>
     <div class="content-container col">
       <Map5 ref="mapRef"
-          :map-data="exampleJSON"
-          :room-inputs="roomInputs"
-          @room-selected="onRoomSelected"
-          @workspace-selected="onWorkspaceSelected"
-          @deselect-all="onDeselectAll"
+            :map-data="exampleJSON"
+            :room-inputs="roomInputs"
+            @room-selected="onRoomSelected"
+            @workspace-selected="onWorkspaceSelected"
+            @deselect-all="onDeselectAll"
+            @return-rooms="saveMap"
       />
     </div>
   </div>
