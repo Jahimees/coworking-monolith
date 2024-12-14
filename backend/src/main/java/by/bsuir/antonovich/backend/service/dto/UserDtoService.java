@@ -67,4 +67,8 @@ public class UserDtoService {
         userService.deleteUser(id);
     }
 
+    public List<UserDto> findUsersWithoutWorkspace() {
+        return null;
+    }
+
 }

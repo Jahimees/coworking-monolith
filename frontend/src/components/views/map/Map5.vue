@@ -14,22 +14,27 @@ const props = defineProps({
   },
   roomInputs: {
     type: Object
+  },
+  workspaceInputs: {
+    type: Object
   }
 })
 
-const emits = defineEmits(["updateRooms", "roomSelected", "workspaceSelected", "deselectAll", "returnRooms"]);
+const emits = defineEmits(["updateRooms", "roomSelected", "workspaceSelected", "deselectAll", "returnRooms",
+"noRoomSelected"]);
 
 // Добавление нового помещения
 function addRoom() {
-  console.log(props.roomInputs)
   const newRoom = {
     id: Utils.UUID(),
     name: props.roomInputs.name,
     width: props.roomInputs.width,
     height: props.roomInputs.height,
+    status: props.roomInputs.status,
+    type: props.roomInputs.type,
+    department: props.roomInputs.department,
     x: 10,
     y: 10,
-    color: 'lightgray',
     workspaces: [], // Рабочие места внутри помещения
   };
   rooms.value.push(newRoom);
@@ -40,25 +45,31 @@ function getRooms() {
   emits('returnRooms', rooms)
 }
 
-defineExpose({
-  addRoom,
-  getRooms
-})
-
 // Добавление рабочего места
 const addWorkspace = () => {
-  if (selectedRoom.value) {
+  console.log(props.workspaceInputs)
+  if (selectedRoom.value != null && typeof selectedRoom.value !== "undefined") {
     const newWorkspace = {
       id: Date.now(),
-      name: `WP ${selectedRoom.value.workspaces.length + 1}`,
+      name: props.workspaceInputs.name,
+      user: props.workspaceInputs.user,
       x: scale,
       y: scale,
       roomId: selectedRoom.value.id
     };
     selectedRoom.value.workspaces.push(newWorkspace);
     initializeWorkspaceDrag(selectedRoom.value, newWorkspace);
+  } else {
+    emits("noRoomSelected")
   }
 };
+
+defineExpose({
+  addRoom,
+  getRooms,
+  addWorkspace
+  // `WP ${selectedRoom.value.workspaces.length + 1}`
+})
 
 // Удаление выбранного рабочего места
 const deleteWorkspace = () => {
@@ -96,6 +107,7 @@ onMounted(() => {
     width: $("#map").width(),
     height: $("#map").height()
   }
+
 })
 
 
@@ -162,6 +174,9 @@ const renderFromJSON = (json) => {
         y: room.y,
         width: room.width,
         height: room.height,
+        status: room.status,
+        type: room.type,
+        department: room.department,
         workspaces: room.workspaces || [],
       }));
 
@@ -218,8 +233,8 @@ const deselectAll = () => {
         :style="{
         width: room.width * scale + 'px',
         height: room.height * scale + 'px',
-        backgroundColor: room.status === 1 ? 'red' : '#a5a5a5',
-        borderColor: room === selectedRoom ? 'yellow' : room.color,
+        backgroundColor: room.status.color,
+        borderColor: room === selectedRoom ? 'yellow' : room.type.color,
         transform: `translate(${room.x}px, ${room.y}px)`,
       }"
         @click="selectRoom(room)"

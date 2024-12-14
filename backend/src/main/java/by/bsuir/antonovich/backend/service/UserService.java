@@ -162,4 +162,8 @@ public class UserService implements UserDetailsService {
         return newUsers;
     }
 
+    public List<User> findAllWithoutWorkspace() {
+        return null;
+    }
+
 }

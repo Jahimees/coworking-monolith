@@ -37,9 +37,10 @@ const filteredOptions = computed(() =>
 
 const selectOption = (option) => {
 
+  console.log("option")
   console.log(option)
   selectedOption.value = option;
-  searchQuery.value = option?.name
+  searchQuery.value = option != null ? option.name : ""
   selectedId.value = option?.id
 
   isDropdownOpen.value = false
@@ -61,11 +62,13 @@ const closeDropDownAndSelect = () => {
   }, 100)
 }
 
+defineExpose({
+  selectOption,
+})
+
 onMounted(() => {
   if (typeof $(".modal-backdrop")[0] !== "undefined") {
     let observer = new MutationObserver(() => {
-      console.log($props.defaultValue)
-      console.log($props.options[0])
       if ($props.defaultValue != null && typeof $props.defaultValue !== "undefined"
           && $props.defaultValue.id !== '' && typeof $props.defaultValue.id !== "undefined") {
         selectOption($props.defaultValue)
