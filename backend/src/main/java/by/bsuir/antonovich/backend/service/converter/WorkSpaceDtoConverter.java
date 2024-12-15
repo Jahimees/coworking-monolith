@@ -25,6 +25,10 @@ public final class WorkSpaceDtoConverter {
             );
         }
 
+        if (dto.getUser() != null) {
+            workSpace.setUser(UserDtoConverter.convertToEntity(dto.getUser(), Direction.UP));
+        }
+
         return workSpace;
     }
 
@@ -41,6 +45,10 @@ public final class WorkSpaceDtoConverter {
                     ? RoomDtoConverter.convertToDtoIdOnly(entity.getRoom())
                     : RoomDtoConverter.convertToDto(entity.getRoom(), direction)
             );
+        }
+
+        if (entity.getUser() != null) {
+            dto.setUser(UserDtoConverter.convertToDto(entity.getUser(), Direction.UP));
         }
 
         return dto;

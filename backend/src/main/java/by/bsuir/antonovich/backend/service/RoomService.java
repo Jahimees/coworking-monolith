@@ -10,12 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final FloorService floorService;
 
     public List<Room> findAllByRoomType(RoomType roomType) {
         return roomRepository.findAllByRoomType(roomType);
@@ -25,13 +27,34 @@ public class RoomService {
         return roomRepository.findAllByRoomStatus(roomStatus);
     }
 
+    public void deleteByFloorId(Integer floorId) {
+        Optional<Floor> floorOptional = floorService.findById(floorId);
+
+        if (floorOptional.isEmpty()) {
+            throw new IllegalArgumentException("Invalid floorId");
+        }
+
+        roomRepository.deleteAllByFloor(floorOptional.get());
+    }
+
     @Transactional
-    public List<Room> saveAll(List<Room> roomList) {
+    public List<Room> saveAll(List<Room> roomList, Integer floorId) {
+        deleteByFloorId(floorId);
+
+        roomList.forEach(room -> {
+                    room.setFloor(new Floor(floorId));
+                    room.getWorkspaces().forEach(workspace -> {
+                        workspace.setRoom(room);
+                    });
+                }
+        );
+
         return roomRepository.saveAll(roomList);
     }
 
-    public Room save(Room room) {
-        return roomRepository.save(room);
+    @Transactional
+    public List<Room> saveAll(List<Room> roomList) {
+        return roomRepository.saveAll(roomList);
     }
 
 }

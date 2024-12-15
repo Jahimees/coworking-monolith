@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,4 +49,15 @@ public class FloorDtoService {
     public void deleteById(Integer id) {
         floorService.deleteById(id);
     }
+
+    public FloorDto findById(Integer id) {
+        Optional<Floor> floorOptional = floorService.findById(id);
+
+        if (floorOptional.isEmpty()) {
+            throw new IllegalArgumentException("No Floor with id " + id + " found");
+        }
+
+        return FloorDtoConverter.convertToDto(floorOptional.get(), Direction.DOWN);
+    }
+
 }

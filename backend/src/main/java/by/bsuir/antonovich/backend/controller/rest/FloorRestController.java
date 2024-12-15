@@ -3,6 +3,7 @@ package by.bsuir.antonovich.backend.controller.rest;
 import by.bsuir.antonovich.backend.data.dto.FloorDto;
 import by.bsuir.antonovich.backend.service.dto.FloorDtoService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,5 +58,10 @@ public class FloorRestController {
         floorDtoService.deleteById(floorId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{floorId}")
+    public ResponseEntity<?> findById(@PathVariable final Integer floorId) {
+        return ResponseEntity.ok(floorDtoService.findById(floorId));
     }
 }

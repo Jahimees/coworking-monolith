@@ -16,4 +16,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     List<Room> findAllByRoomType(RoomType roomType);
     List<Room> findAllByRoomStatus(RoomStatus roomStatus);
+
+    void deleteAllByFloor(Floor floor);
 }

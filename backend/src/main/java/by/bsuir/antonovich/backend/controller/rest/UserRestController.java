@@ -55,10 +55,10 @@ public class UserRestController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers(@RequestParam("without_workspace") boolean withoutWorkspace) {
+    public ResponseEntity<?> getAllUsers(@RequestParam(name = "without_workspace", required = false) boolean withoutWorkspace) {
 
         if (withoutWorkspace) {
-//            return ResponseEntity.ok(userDtoService);
+            return ResponseEntity.ok(userDtoService.findUsersWithoutWorkspace());
         }
 
         return ResponseEntity.ok(userDtoService.findAll());

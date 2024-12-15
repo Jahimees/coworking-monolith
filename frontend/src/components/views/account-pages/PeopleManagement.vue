@@ -26,7 +26,7 @@ function reloadTable() {
 }
 
 async function initDataTable() {
-  await fetch("http://localhost:8080/api/v1/users")
+  await fetch("http://localhost:8080/api/v1/users?without_workspace=false")
       .then(data => data.json())
       .then(json => {
         users = json

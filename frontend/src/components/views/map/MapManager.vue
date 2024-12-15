@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import interact from 'interactjs';
 import Utils from "@/scripts/Utils.js";
 
@@ -21,7 +21,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits(["updateRooms", "roomSelected", "workspaceSelected", "deselectAll", "returnRooms",
-"noRoomSelected"]);
+  "noRoomSelected"]);
 
 // Добавление нового помещения
 function addRoom() {
@@ -29,7 +29,7 @@ function addRoom() {
     id: Utils.UUID(),
     name: props.roomInputs.name,
     width: props.roomInputs.width,
-    height: props.roomInputs.height,
+    length: props.roomInputs.length,
     status: props.roomInputs.status,
     type: props.roomInputs.type,
     department: props.roomInputs.department,
@@ -119,7 +119,6 @@ const initializeRoomDrag = (room) => {
         const index = rooms.value.findIndex((r) => r.id === room.id);
         if (index !== -1) {
 
-
           const roomData = rooms.value[index];
           // Новые координаты
           const newX = roomData.x + event.dx;
@@ -127,7 +126,7 @@ const initializeRoomDrag = (room) => {
 
           // Ограничение движения в пределах карты
           roomData.x = Math.max(0, Math.min(newX, mapBounds.width - roomData.width));
-          roomData.y = Math.max(0, Math.min(newY, mapBounds.height - roomData.height));
+          roomData.y = Math.max(0, Math.min(newY, mapBounds.height - roomData.length));
 
           const target = event.target;
           target.style.transform = `translate(${roomData.x}px, ${roomData.y}px)`;
@@ -153,7 +152,7 @@ const initializeWorkspaceDrag = (room, workspace) => {
           //10 - половина размера раб. места (20пх) 20пх - размер раб места.
           // Ограничение движения внутри комнаты
           wp.x = Math.max(-room.width * scale / 2, Math.min(newX, room.width * scale / 2));
-          wp.y = Math.max(-room.height * scale / 2, Math.min(newY, room.height * scale / 2));
+          wp.y = Math.max(-room.length * scale / 2, Math.min(newY, room.length * scale / 2));
 
           const wpElement = document.getElementById(`wp-${workspace.id}`);
           wpElement.style.transform = `translate(${wp.x}px, ${wp.y}px)`;
@@ -165,6 +164,7 @@ const initializeWorkspaceDrag = (room, workspace) => {
 
 // Рендеринг из JSON
 const renderFromJSON = (json) => {
+  console.log("PARARSARAS")
   if (typeof props.mapData != "undefined") {
     const data = JSON.parse(props.mapData);
     if (Array.isArray(data.rooms)) {
@@ -173,7 +173,7 @@ const renderFromJSON = (json) => {
         x: room.x,
         y: room.y,
         width: room.width,
-        height: room.height,
+        length: room.length,
         status: room.status,
         type: room.type,
         department: room.department,
@@ -189,8 +189,10 @@ const renderFromJSON = (json) => {
   }
 };
 
-// Загрузка примера карты
-renderFromJSON();
+watch(() => props.mapData, () => {
+  console.log(props.mapData)
+  renderFromJSON(props.mapData);
+})
 
 const selectRoom = (room) => {
   if (selectedWorkspace.value != null &&
@@ -232,7 +234,7 @@ const deselectAll = () => {
         class="room"
         :style="{
         width: room.width * scale + 'px',
-        height: room.height * scale + 'px',
+        height: room.length * scale + 'px',
         backgroundColor: room.status.color,
         borderColor: room === selectedRoom ? 'yellow' : room.type.color,
         transform: `translate(${room.x}px, ${room.y}px)`,
@@ -264,12 +266,6 @@ const deselectAll = () => {
 
     <!-- Панель управления -->
     <div class="controls">
-      ROOM: {{ selectedRoom }}
-      WORKSPACE: {{ selectedWorkspace }}
-      <button @click="addRoom">Добавить помещение</button>
-      <button @click="addWorkspace" :disabled="!selectedRoom">Добавить рабочее место</button>
-      <button @click="deleteWorkspace" :disabled="!selectedWorkspace">Удалить рабочее место</button>
-      <button @click="deleteRoom">Удалить Комнату</button>
       <button @click="deselectAll">Убрать выделение</button>
     </div>
   </div>
@@ -277,7 +273,7 @@ const deselectAll = () => {
 
 <style scoped>
 .map-container {
-  position: relative;
+  //position: relative;
   width: 100%;
   height: 100%;
   background-color: #f0f0f0;
@@ -307,6 +303,6 @@ const deselectAll = () => {
 }
 
 .controls {
-  margin-top: 10px;
+  margin: 10px 0 0 10px;
 }
 </style>

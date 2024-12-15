@@ -18,7 +18,7 @@ const inputNames = [
   "id", "name", "username", "email", "department", "roles", "workspace", "password"
 ]
 
-const url = "http://localhost:8080/api/v1/users"
+const url = "http://localhost:8080/api/v1/users?without_workspace=false"
 
 let isIdCorrect = ref(true)
 let isNameCorrect = ref(true)

@@ -3,6 +3,7 @@ package by.bsuir.antonovich.backend.service;
 import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.User;
+import by.bsuir.antonovich.backend.data.WorkSpace;
 import by.bsuir.antonovich.backend.exception.DepartmentNotFoundException;
 import by.bsuir.antonovich.backend.exception.EmailAlreadyExistsException;
 import by.bsuir.antonovich.backend.exception.NotEnoughRegistrationData;
@@ -34,6 +35,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final DepartmentRepository departmentRepository;
+    private final WorkSpaceService workSpaceService;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -163,7 +165,13 @@ public class UserService implements UserDetailsService {
     }
 
     public List<User> findAllWithoutWorkspace() {
-        return null;
+        List<WorkSpace> workSpacesWithUsers = workSpaceService.findAllWithUsers();
+        List<User> users = findAll();
+
+        List<Integer> workspaceUserId = new ArrayList<>();
+        workSpacesWithUsers.forEach(workSpace -> workspaceUserId.add(workSpace.getUser().getId()));
+
+        return users.stream().filter(user -> !workspaceUserId.contains(user.getId())).toList();
     }
 
 }

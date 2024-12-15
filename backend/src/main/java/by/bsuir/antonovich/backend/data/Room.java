@@ -13,9 +13,8 @@ import java.util.List;
 public class Room implements SimpleEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -51,7 +50,7 @@ public class Room implements SimpleEntity {
     @JoinColumn(name = "floor_id")
     private Floor floor;
 
-    public Room(final Integer id) {
+    public Room(final String id) {
         this.id = id;
     }
 }

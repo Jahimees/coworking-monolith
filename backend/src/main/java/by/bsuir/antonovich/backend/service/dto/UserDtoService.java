@@ -4,6 +4,7 @@ import by.bsuir.antonovich.backend.data.User;
 import by.bsuir.antonovich.backend.data.dto.UserDto;
 import by.bsuir.antonovich.backend.exception.*;
 import by.bsuir.antonovich.backend.service.UserService;
+import by.bsuir.antonovich.backend.service.WorkSpaceService;
 import by.bsuir.antonovich.backend.service.converter.UserDtoConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import static by.bsuir.antonovich.backend.service.converter.Direction.DOWN;
 public class UserDtoService {
 
     private final UserService userService;
+    private final WorkSpaceService workSpaceService;
 
     public List<UserDto> findAll() {
         List<User> userList = userService.findAll();
@@ -68,7 +70,10 @@ public class UserDtoService {
     }
 
     public List<UserDto> findUsersWithoutWorkspace() {
-        return null;
+
+        return userService.findAllWithoutWorkspace().stream().map(
+                user -> UserDtoConverter.convertToDto(user, DOWN)
+        ).toList();
     }
 
 }

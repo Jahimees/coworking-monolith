@@ -28,7 +28,7 @@ onMounted(() => {
 
 async function loadUsers() {
   const users = ref([])
-  await fetch("http://localhost:8080/api/v1/users")
+  await fetch("http://localhost:8080/api/v1/users?without_workspace=false")
       .then(data => data.json())
       .then(json => users.value = json)
 

@@ -65,10 +65,6 @@ public class UserDtoConverter {
             }
         }
 
-        if (userDto.getWorkSpace() != null) {
-            user.setWorkSpace(WorkSpaceDtoConverter.convertToEntity(userDto.getWorkSpace(), direction));
-        }
-
         List<Office> officeList = new ArrayList<>();
         if (userDto.getOffices() != null && !userDto.getOffices().isEmpty()) {
             userDto.getOffices().forEach(officeDto ->

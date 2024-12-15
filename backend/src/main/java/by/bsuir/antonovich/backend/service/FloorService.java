@@ -70,4 +70,8 @@ public class FloorService {
     public void deleteById(Integer id) {
         floorRepository.deleteById(id);
     }
+
+    public Optional<Floor> findById(Integer id) {
+        return floorRepository.findById(id);
+    }
 }

@@ -25,7 +25,6 @@ public class UserDto implements DtoEntity {
     private String lastName;
     private String middleName;
     private DepartmentDto department;
-    private WorkSpaceDto workSpace;
     private List<OfficeDto> offices;
     private List<RoleDto> roles;
 

@@ -63,11 +63,6 @@ public class User implements UserDetails, SimpleEntity {
     @ManyToMany(mappedBy = "userOwnerList")
     private List<Office> offices;
 
-    @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "workspace_id")
-    private WorkSpace workSpace;
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

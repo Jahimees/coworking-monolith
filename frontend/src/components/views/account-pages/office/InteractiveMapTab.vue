@@ -1,9 +1,10 @@
 <script setup>
 
 import SearchSelect from "@/components/util/SearchSelect.vue";
-import Map5 from "@/components/views/map/Map5.vue";
+import Map5 from "@/components/views/map/MapManager.vue";
 import {onMounted, ref} from "vue";
 import Utils from "@/scripts/Utils.js";
+import InfoModal from "@/components/util/InfoModal.vue";
 
 const selectedRoom = ref(null)
 const selectedWorkspace = ref(null)
@@ -17,7 +18,7 @@ const roomInputs = ref({
   tempId: null,
   name: null,
   width: null,
-  height: null,
+  length: null,
   status: null,
   type: null,
   color: null
@@ -56,7 +57,7 @@ function clearErrors() {
 function validateFields() {
   let name = roomInputs.value.name
   let width = roomInputs.value.width
-  let length = roomInputs.value.height
+  let length = roomInputs.value.length
   let status = roomInputs.value.status
   let department = roomInputs.value.department
   let type = roomInputs.value.type
@@ -106,7 +107,18 @@ function onRoomSelected(room) {
 
 function onWorkspaceSelected(workspace) {
   selectedWorkspace.value = workspace
-  workspaceInputs.value = selectedWorkspace.value
+  workspaceInputs.value = selectedWorkspace.value;
+
+  if (selectedWorkspace.value != null) {
+    if (selectedWorkspace.value.user != null) {
+      userSelectRef.value.selectOption({
+        id: selectedWorkspace.value.user.id, name:
+            Utils.getUserFullName(selectedWorkspace.value.user)
+      })
+    } else {
+      userSelectRef.value.selectOption({id: -1, name: "Не выбрано"})
+    }
+  }
 }
 
 function onDeselectAll() {
@@ -114,41 +126,13 @@ function onDeselectAll() {
   statusSelectRef.value.selectOption(null)
   typeSelectRef.value.selectOption(null)
   departmentSelectRef.value.selectOption(null)
+  userSelectRef.value.selectOption(null)
   roomInputs.value = ref({})
   workspaceInputs.value = ref({
     name: null
   })
 
 }
-
-const exampleJSON = ref(`
-{
-  "rooms": [
-    {
-      "id": 1,
-      "name": "Room A",
-      "x": 10,
-      "y": 10,
-      "width": 10,
-      "height": 10,
-      "status": {
-        "id": 1,
-        "name": "свободна",
-        "color": "#12FF12"
-      },
-      "type": {
-        "id": 1,
-        "name": "свободна",
-        "color": "#12FF12"
-      },
-      "workplaces": [
-        { "id": 101, "name": "WP 1", "x": 1, "y": 1, "roomId": 1 },
-        { "id": 102, "name": "WP 2", "x": 3, "y": 2, "roomId": 1 }
-      ]
-    }
-  ]
-}
-`);
 
 //////////////////////SELECT FIELDS/////////////////////
 
@@ -159,6 +143,7 @@ onMounted(() => {
   loadStatuses();
   loadTypes();
   loadDepartments();
+  loadUsers()
 })
 
 const offices = ref([])
@@ -225,22 +210,56 @@ function loadFloorsSearch() {
 const isOfficeChosen = ref(true)
 const isFloorChosen = ref(true)
 
-function loadMap() {
-  validateOfficeAndFloor()
+const mapData = ref("")
 
-  if (selectedFloor.value.rooms.length === 0) {
-    console.log("NULL")
-  } else {
-
+async function loadMap() {
+  if (!validateOfficeAndFloor()) {
+    return
   }
+
+  await fetch("http://localhost:8080/api/v1/floors/" + selectedFloorSearch.value.id, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+      .then(data => data.json())
+      .then(json => mapData.value = JSON.stringify(json))
+
 }
 
 function retrieveMapValues() {
   mapRef.value.getRooms();
 }
 
-function saveMap(rooms) {
-  console.log(rooms)
+const saveMapUrl = "http://localhost:8080/api/v1/maps"
+
+async function saveMap(rooms) {
+  if (!validateOfficeAndFloor()) {
+    return
+  }
+
+  let jsonForSend = {
+    officeId: selectedOfficeSearch.value.id,
+    floorId: selectedFloorSearch.value.id,
+    rooms: rooms.value
+  }
+
+  await fetch(saveMapUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(jsonForSend)
+  })
+      .then(data => data.json())
+      .then(json => onSuccessMapUpdate("Карта сохранена успешно"))
+      .catch(er => {
+        onFailMapUpdate("Не удалось сохранить карту")
+      })
+
+  rooms.value.forEach(room => {
+    console.log(room)
+  })
 }
 
 function validateOfficeAndFloor() {
@@ -371,7 +390,7 @@ async function loadDepartments() {
   })
       .then(data => data.json())
       .then(json => {
-        types.value = json
+        departments.value = json
       })
 
   departmentsSearchMap.push({id: -1, name: "Не выбрано"})
@@ -380,6 +399,7 @@ async function loadDepartments() {
       departmentsSearchMap.push({id: department.id, name: department.name})
     })
   }
+
 }
 
 function onDepartmentSelected(departmentId) {
@@ -405,6 +425,7 @@ function onDepartmentSelected(departmentId) {
 const statusSelectRef = ref({})
 const typeSelectRef = ref({})
 const departmentSelectRef = ref({})
+const userSelectRef = ref({})
 
 const isRoomSelected = ref(true)
 const isWorkspaceNameCorrect = ref(true)
@@ -478,6 +499,42 @@ function onUserSelected(userId) {
   workspaceInputs.value.user = chosenUser
 }
 
+//MODAL
+
+const isInfoModalVisible = ref(false)
+const infoTitle = ref("")
+const infoMessage = ref("")
+
+function onSuccessMapUpdate(text) {
+  infoTitle.value = "Успех"
+  if (typeof text === "undefined" || text === null || text === "") {
+    infoMessage.value = "Действие выполнено успешно"
+  } else {
+    infoMessage.value = text
+  }
+
+  openInfoModal()
+}
+
+function onFailMapUpdate(text) {
+  infoTitle.value = "Ошибка"
+  if (typeof text === "undefined" || text === "" || text === null) {
+    infoMessage.value = "Произошла ошибка сохранения"
+  } else {
+    infoMessage.value = text;
+  }
+  openInfoModal()
+}
+
+function openInfoModal() {
+  isInfoModalVisible.value = true;
+}
+
+function closeInfoModal() {
+  isInfoModalVisible.value = false;
+}
+
+
 </script>
 
 <template>
@@ -518,7 +575,7 @@ function onUserSelected(userId) {
       <div class="input-field">
         <label>Длина</label>
         <label v-if="!isLengthCorrect" class="err-label">1 < x < 25</label>
-        <input id="length-input" v-model="roomInputs.height" type="number">
+        <input id="length-input" v-model="roomInputs.length" type="number">
       </div>
       <div class="input-field">
         <label>Статус</label>
@@ -549,14 +606,14 @@ function onUserSelected(userId) {
       </div>
       <div class="input-field">
         <label>Сотрудник</label>
-        <SearchSelect/>
+        <SearchSelect ref="userSelectRef" :options="usersSearchMap" @return-id="onUserSelected"/>
       </div>
       <button class="manage-btn" @click="addWorkspace">Создать</button>
       <button class="manage-btn">Удалить</button>
     </div>
     <div class="content-container col">
       <Map5 ref="mapRef"
-            :map-data="exampleJSON"
+            :map-data="mapData"
             :room-inputs="roomInputs"
             :workspace-inputs="workspaceInputs"
             @room-selected="onRoomSelected"
@@ -567,6 +624,9 @@ function onUserSelected(userId) {
       />
     </div>
   </div>
+
+  <InfoModal :title="infoTitle" :message="infoMessage" v-show="isInfoModalVisible"
+             @close="closeInfoModal" @confirm="closeInfoModal"/>
 </template>
 
 <style scoped>

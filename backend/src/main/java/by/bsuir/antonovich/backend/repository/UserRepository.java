@@ -20,6 +20,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByDepartment(Department department);
 
-    List<User> findAllByWorkSpace(WorkSpace workSpace);
-
 }

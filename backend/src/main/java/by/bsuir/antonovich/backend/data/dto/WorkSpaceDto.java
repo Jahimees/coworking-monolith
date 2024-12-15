@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkSpaceDto implements DtoEntity {
 
-    private Integer id;
+    private String id;
     private String name;
     private RoomDto room;
     private Double x;
     private Double y;
+    private UserDto user;
 
-    public WorkSpaceDto(Integer id) {
+    public WorkSpaceDto(String id) {
         this.id = id;
     }
 }
