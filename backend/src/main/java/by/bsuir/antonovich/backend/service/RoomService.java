@@ -57,5 +57,9 @@ public class RoomService {
         return roomRepository.saveAll(roomList);
     }
 
+    public Optional<Room> findById(String roomId) {
+        return roomRepository.findById(roomId);
+    }
+
 }
 

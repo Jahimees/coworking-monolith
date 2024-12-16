@@ -9,8 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/adaptive": "^6.1.15",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "@fullcalendar/vue3": "^6.1.15",
     "@jsplumb/browser-ui": "^6.2.10",
+    "@primevue/themes": "^4.2.5",
+    "@vuepic/vue-datepicker": "^10.0.0",
     "datatables.net-dt": "^2.1.8",
+    "fullcalendar": "^6.1.15",
     "interactjs": "^1.10.27",
     "vue": "^3.4.29",
     "vue-router": "^4.4.3"

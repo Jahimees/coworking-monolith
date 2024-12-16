@@ -2,7 +2,6 @@ package by.bsuir.antonovich.backend.service;
 
 import by.bsuir.antonovich.backend.data.Room;
 import by.bsuir.antonovich.backend.data.RoomStatus;
-import by.bsuir.antonovich.backend.repository.BookInfoRepository;
 import by.bsuir.antonovich.backend.repository.RoomStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ public class RoomStatusService {
 
     private final RoomStatusRepository roomStatusRepository;
     private final RoomService roomService;
-    private final BookInfoRepository bookInfoRepository;
 
     public List<RoomStatus> findAll() {
         return roomStatusRepository.findAll();

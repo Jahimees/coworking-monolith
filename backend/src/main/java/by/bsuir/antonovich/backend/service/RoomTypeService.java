@@ -2,15 +2,11 @@ package by.bsuir.antonovich.backend.service;
 
 import by.bsuir.antonovich.backend.data.Room;
 import by.bsuir.antonovich.backend.data.RoomType;
-import by.bsuir.antonovich.backend.data.dto.RoomTypeDto;
-import by.bsuir.antonovich.backend.repository.BookInfoRepository;
-import by.bsuir.antonovich.backend.repository.RoomRepository;
 import by.bsuir.antonovich.backend.repository.RoomTypeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.spec.RSAOtherPrimeInfo;
 import java.util.List;
 import java.util.Optional;
 

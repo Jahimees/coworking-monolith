@@ -104,7 +104,7 @@ function closeModal() {
       <a href="#" id="officeManagement" class="menu-btn">Управление офисами</a>
       <a href="#" id="roomBooking" class="menu-btn">Бронирование переговорных</a>
       <a href="#" id="analytics" class="menu-btn">Аналитика бронирования</a>
-      <a href="#" id="myBooks" class="menu-btn">Мои текущие брони</a>
+      <a href="#" id="myBooks" class="menu-btn">Мои брони</a>
       <a href="" @click="Utils.logout()" class="menu-btn">Выйти из аккаунта</a>
     </div>
     <div class="w-100">
@@ -112,9 +112,9 @@ function closeModal() {
       <ManagePeople v-if="isPeopleManagement"/>
       <DepartmentManagement v-if="isDepartmentManagement"/>
       <OfficeManagement v-if="isOfficeManagement"/>
-      <RoomBooking v-if="isRoomBooking"/>
+      <RoomBooking :parsed-token="parsedToken" v-if="isRoomBooking"/>
       <Analytics v-if="isAnalytics"/>
-      <MyBooks v-if="isMyBooks"/>
+      <MyBooks v-if="isMyBooks" :parsed-token="parsedToken" />
     </div>
   </div>
 

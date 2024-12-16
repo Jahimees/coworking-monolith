@@ -174,4 +174,8 @@ public class UserService implements UserDetailsService {
         return users.stream().filter(user -> !workspaceUserId.contains(user.getId())).toList();
     }
 
+    public Optional<User> findById(Integer id) {
+        return userRepository.findById(id);
+    }
+
 }

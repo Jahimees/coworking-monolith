@@ -21,6 +21,8 @@ import RegView from "@/components/views/auth/RegView.vue";
 import HomeView from "@/components/views/HomeView.vue";
 import DrawPanelView from "@/components/views/DrawPanelView.vue";
 import PersonalAccountView from "@/components/views/PersonalAccountView.vue"
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 import {createRouter, createWebHistory} from "vue-router";
 
@@ -52,4 +54,5 @@ const router = createRouter({
 
 createApp(App)
     .use(router)
+    .component('VueDatePicker', VueDatePicker)
     .mount('#app')

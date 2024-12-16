@@ -45,6 +45,14 @@ var utils = {
         return JSON.parse(jsonPayload);
     },
 
+    isOverlapping(newStart, newEnd, events) {
+        return events.some(event => {
+            // Проверяем, пересекается ли диапазон
+            return newStart < event.end && newEnd > event.start;
+        });
+    },
+
+
     async doInfoAction() {
         const location = window.location.href
         const paramsString = window.location.search

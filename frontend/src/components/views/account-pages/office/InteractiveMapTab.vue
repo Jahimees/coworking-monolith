@@ -534,6 +534,14 @@ function closeInfoModal() {
   isInfoModalVisible.value = false;
 }
 
+function onDeleteRoom() {
+  mapRef.value.deleteRoom()
+}
+
+function onDeleteWorkspace() {
+  mapRef.value.deleteWorkspace()
+}
+
 
 </script>
 
@@ -594,7 +602,7 @@ function closeInfoModal() {
         <SearchSelect ref="typeSelectRef" :options="typesSearchMap" @return-id="onTypeSelected"/>
       </div>
       <button class="manage-btn" @click="addRoom">Создать</button>
-      <button class="manage-btn">Удалить</button>
+      <button class="manage-btn" @click="onDeleteRoom">Удалить</button>
       <hr>
 
       <h3>Создать/редактировать рабочее место</h3>
@@ -609,7 +617,7 @@ function closeInfoModal() {
         <SearchSelect ref="userSelectRef" :options="usersSearchMap" @return-id="onUserSelected"/>
       </div>
       <button class="manage-btn" @click="addWorkspace">Создать</button>
-      <button class="manage-btn">Удалить</button>
+      <button class="manage-btn" @click="onDeleteWorkspace">Удалить</button>
     </div>
     <div class="content-container col">
       <Map5 ref="mapRef"

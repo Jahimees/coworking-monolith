@@ -33,3 +33,18 @@
 .confirm-deletion {
     background-color: red;
 }
+
+.fc .fc-toolbar-title {
+    font-size: 1em !important;
+    text-align: center;
+}
+
+.fc .fc-button .fc-icon {
+    font-size: 1em;
+    padding: 0;
+}
+
+.fc .fc-button {
+    font-size: 1em;
+    padding: 0 0.2em;
+}

@@ -64,13 +64,6 @@ const addWorkspace = () => {
   }
 };
 
-defineExpose({
-  addRoom,
-  getRooms,
-  addWorkspace
-  // `WP ${selectedRoom.value.workspaces.length + 1}`
-})
-
 // Удаление выбранного рабочего места
 const deleteWorkspace = () => {
   if (selectedRoom.value && selectedWorkspace.value) {
@@ -89,6 +82,16 @@ const deleteRoom = () => {
     deselectAll()
   }
 };
+
+
+defineExpose({
+  addRoom,
+  getRooms,
+  addWorkspace,
+  deleteRoom,
+  deleteWorkspace
+  // `WP ${selectedRoom.value.workspaces.length + 1}`
+})
 
 // Эмитим изменения наружу
 const emitChanges = (type, payload) => {
@@ -235,8 +238,9 @@ const deselectAll = () => {
         :style="{
         width: room.width * scale + 'px',
         height: room.length * scale + 'px',
-        backgroundColor: room.status.color,
-        borderColor: room === selectedRoom ? 'yellow' : room.type.color,
+        backgroundColor: room.type.color,
+        borderWidth: 5 + 'px',
+        borderColor: room === selectedRoom ? 'yellow' : room.status.color,
         transform: `translate(${room.x}px, ${room.y}px)`,
       }"
         @click="selectRoom(room)"

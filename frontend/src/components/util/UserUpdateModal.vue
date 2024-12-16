@@ -66,7 +66,7 @@ function updateUser() {
     return
   }
 
-  fetch(url + "/" + props.data[2], {
+  fetch("http://localhost:8080/api/v1/users/" + props.data[2], {
     method: "PATCH",
     headers: {
       'Content-Type': 'application/json'

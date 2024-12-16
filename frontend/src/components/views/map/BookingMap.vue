@@ -1,6 +1,8 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
 import interact from "interactjs";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const scale = 20; // Коэффициент масштабирования
 const rooms = ref([]); // Список помещений
@@ -119,11 +121,15 @@ const deselectAll = () => {
   emits("deselectAll")
 }
 
-
 </script>
 
 <template>
   <div id="booking-map" class="map-container">
+    <!-- Панель управления -->
+<!--    <div class="controls">-->
+<!--      <button @click="deselectAll">Убрать выделение</button>-->
+<!--    </div>-->
+    <hr>
     <!-- Комнаты -->
     <div
         v-for="room in rooms"
@@ -133,8 +139,9 @@ const deselectAll = () => {
         :style="{
         width: room.width * scale + 'px',
         height: room.length * scale + 'px',
-        backgroundColor: room.status.color,
-        borderColor: room === selectedRoom ? 'yellow' : room.type.color,
+        backgroundColor: room.type.color,
+        borderWidth: 5 + 'px',
+        borderColor: room === selectedRoom ? 'yellow' : room.status.color,
         transform: `translate(${room.x}px, ${room.y}px)`,
       }"
         @click="selectRoom(room)"
@@ -145,7 +152,7 @@ const deselectAll = () => {
       <div
           v-for="wp in room.workspaces"
           :key="wp.id"
-          :id="'wp-' + wp.id"
+          :id="'wp-i-' + wp.id"
           class="workspace"
           :style="{
           width: '30px',
@@ -162,10 +169,7 @@ const deselectAll = () => {
       </div>
     </div>
 
-    <!-- Панель управления -->
-    <div class="controls">
-      <button @click="deselectAll">Убрать выделение</button>
-    </div>
+
   </div>
 </template>
 
@@ -176,7 +180,6 @@ const deselectAll = () => {
   height: 100%;
   background-color: #f0f0f0;
   overflow: hidden;
-  border: 1px solid #ccc;
 }
 
 .room {
