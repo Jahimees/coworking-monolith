@@ -457,7 +457,7 @@ function closeInfoModal() {
           <label>Тема</label>
           <label style="margin-left: 5px" class="err-label" v-if="!isSelectedThemeValid">Название от 3 до 20
             символов</label>
-          <input v-model="selectedTheme">
+          <input v-model="selectedTheme" style="width: 100%">
         </div>
         <button class="col" @click="onRoomBooking">Забронировать</button>
       </div>

@@ -17,10 +17,13 @@
     "@jsplumb/browser-ui": "^6.2.10",
     "@primevue/themes": "^4.2.5",
     "@vuepic/vue-datepicker": "^10.0.0",
+    "chart.js": "^3.9.1",
     "datatables.net-dt": "^2.1.8",
     "fullcalendar": "^6.1.15",
+    "html2canvas": "^1.4.1",
     "interactjs": "^1.10.27",
     "vue": "^3.4.29",
+    "vue-chart-3": "^3.1.8",
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
