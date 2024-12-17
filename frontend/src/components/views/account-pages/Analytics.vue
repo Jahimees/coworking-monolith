@@ -141,8 +141,6 @@ const printSection = async () => {
             <input class="date-input" type="date" v-model="endDate" v-if="startDate != null"
                    :min="startDate">
           </div>
-        </div>
-        <div>
           <div>Офис</div>
           <div class="flex-container">
             <SearchSelect class="office-select"
@@ -153,6 +151,7 @@ const printSection = async () => {
 
           </div>
         </div>
+
 
         <hr>
         <h6>Список наиболее популярных переговорных</h6>
@@ -170,17 +169,13 @@ const printSection = async () => {
         <br>
       </div>
     </div>
-
-    <div class="content-container">
-      <h3>Аналитика паспределения рабочих мест</h3>
-    </div>
   </div>
 </template>
 
 <style scoped>
 .content-container {
   margin: 0 2em 0 1em;
-  width: 45%;
+  width: 100%;
   padding: 10px;
   border-radius: 5px;
   height: max-content;
@@ -197,7 +192,6 @@ h3 {
 }
 
 .date-input {
-  width: 100%;
 }
 
 .office-select {

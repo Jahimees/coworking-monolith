@@ -29,7 +29,14 @@ public final class DepartmentDtoConverter {
         dto.setName(entity.getName());
 
         if (entity.getBoss() != null) {
-            dto.setBoss(UserDtoConverter.convertToDto(entity.getBoss(), direction));
+            UserDto boss = new UserDto();
+            boss.setId(entity.getBoss().getId());
+            boss.setMiddleName(entity.getBoss().getMiddleName());
+            boss.setFirstName(entity.getBoss().getFirstName());
+            boss.setLastName(entity.getBoss().getLastName());
+            boss.setUsername(entity.getBoss().getUsername());
+            boss.setEmail(entity.getBoss().getEmail());
+            dto.setBoss(boss);
         }
 
         return dto;
