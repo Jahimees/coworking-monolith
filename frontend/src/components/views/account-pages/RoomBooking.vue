@@ -277,7 +277,7 @@ function validateRoomBookingValues() {
     isStartDateValid.value = false
   }
 
-  if (selectedRoom.value == null) {
+  if (selectedRoom.value == null || selectedRoom.value.type.name !== "Переговорная") {
     isSelectedRoomValid.value = false;
   }
 
@@ -306,6 +306,12 @@ async function onRoomBooking() {
   if (!validateRoomBookingValues()) {
     return
   }
+
+  if (selectedRoom.value.status.name === "Не функционирует") {
+    onNotWorkingRoomSelected()
+    return
+  }
+
 
   let startDate = new Date(selectedDate.value + 'T' + selectedTime.value);
   let endDate = startDate.getTime() + selectedDuration.value * 60 * 1000;
@@ -375,6 +381,12 @@ function onSuccessModal() {
   openInfoModal()
 }
 
+function onNotWorkingRoomSelected() {
+  infoTitle.value = "Ошибка"
+  infoMessage.value = "Данная переговорная отмечена менеджером, как нефункционирующая"
+  openInfoModal()
+}
+
 function onFailModal() {
   infoTitle.value = "Ошибка"
   infoMessage.value = "Произошла ошибка сохранения"
@@ -429,7 +441,7 @@ function closeInfoModal() {
 
       </div>
       <div class="booking-panel row">
-        <label style="margin-left: 5px" class="err-label" v-if="!isSelectedRoomValid">Выберите комнату</label>
+        <label style="margin-left: 5px" class="err-label" v-if="!isSelectedRoomValid">Выберите комнату с типом "Переговорная"</label>
         <div class="col">
           <label>Дата</label>
           <label style="margin-left: 5px" class="err-label" v-if="!isStartDateValid">Выберите дату</label>

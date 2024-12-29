@@ -4,12 +4,7 @@ import by.bsuir.antonovich.backend.data.Department;
 import by.bsuir.antonovich.backend.data.Role;
 import by.bsuir.antonovich.backend.data.User;
 import by.bsuir.antonovich.backend.data.WorkSpace;
-import by.bsuir.antonovich.backend.exception.DepartmentNotFoundException;
-import by.bsuir.antonovich.backend.exception.EmailAlreadyExistsException;
-import by.bsuir.antonovich.backend.exception.NotEnoughRegistrationData;
-import by.bsuir.antonovich.backend.exception.RoleNotFoundException;
-import by.bsuir.antonovich.backend.exception.UserNotFoundException;
-import by.bsuir.antonovich.backend.exception.UsernameAlreadyExistsException;
+import by.bsuir.antonovich.backend.exception.*;
 import by.bsuir.antonovich.backend.repository.DepartmentRepository;
 import by.bsuir.antonovich.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -52,7 +47,21 @@ public class UserService implements UserDetailsService {
 
         checkUserExistence(user);
 
-        user.setRoles(List.of(roleService.findByName(ROLE_USER)));
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of(roleService.findByName(ROLE_USER)));
+        } else {
+            List<Role> newRoleList = new ArrayList<>();
+            for (Role role : user.getRoles()) {
+                Optional<Role> roleOptional = roleService.findById(role.getId());
+
+                if (roleOptional.isEmpty()) {
+                    throw new IllegalArgumentException("role not found");
+                }
+
+                newRoleList.add(roleOptional.get());
+            }
+            user.setRoles(newRoleList);
+        }
 
         if (user.getDepartment() == null || user.getDepartment().getId() == -1) {
             user.setDepartment(null);

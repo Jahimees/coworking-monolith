@@ -84,6 +84,7 @@ function validateFields() {
 
 function onRoomSelected(room) {
   clearErrors()
+
   selectedRoom.value = room
   roomInputs.value = selectedRoom.value
 
@@ -101,6 +102,11 @@ function onRoomSelected(room) {
         id: selectedRoom.value.department.id,
         name: selectedRoom.value.department.name
       })
+    } else {
+      departmentSelectRef.value.selectOption({
+        id: -1,
+        name: "Не выбрано"
+      })
     }
   }
 }
@@ -112,8 +118,8 @@ function onWorkspaceSelected(workspace) {
   if (selectedWorkspace.value != null) {
     if (selectedWorkspace.value.user != null) {
       userSelectRef.value.selectOption({
-        id: selectedWorkspace.value.user.id, name:
-            Utils.getUserFullName(selectedWorkspace.value.user)
+        id: selectedWorkspace.value.user.id,
+        name: Utils.getUserFullName(selectedWorkspace.value.user)
       })
     } else {
       userSelectRef.value.selectOption({id: -1, name: "Не выбрано"})
@@ -238,6 +244,10 @@ async function saveMap(rooms) {
     return
   }
 
+  if (!validateWorkspaces(rooms.value)) {
+    return
+  }
+
   let jsonForSend = {
     officeId: selectedOfficeSearch.value.id,
     floorId: selectedFloorSearch.value.id,
@@ -257,9 +267,33 @@ async function saveMap(rooms) {
         onFailMapUpdate("Не удалось сохранить карту")
       })
 
-  rooms.value.forEach(room => {
-    console.log(room)
+}
+
+function validateWorkspaces(rooms) {
+  let roomNames = []
+
+  rooms.forEach(room => {
+
+    let length = room.length
+    let width = room.width;
+    let square = length * width;
+
+    let workspaceSquareRequired = (room.workspaces.length) * 4.5;
+
+    if (square < workspaceSquareRequired) {
+      roomNames.push(room.name)
+    }
   })
+
+  if (roomNames.length != 0) {
+    infoTitle.value = "Ошибка"
+    infoMessage.value = "Площадь помещений: " + roomNames.map(name => "'" + name + "'") + " не расчитана на добавление еще одного рабочего места"
+
+    openInfoModal()
+    return false;
+  }
+
+  return true
 }
 
 function validateOfficeAndFloor() {
@@ -456,7 +490,7 @@ function addWorkspace() {
 const users = ref([])
 let usersSearchMap = []
 
-const usersUrl = "http://localhost:8080/api/v1/users?without_workspace=true"
+const usersUrl = "http://localhost:8080/api/v1/users?without_workspace=false"
 
 async function loadUsers() {
   await fetch(usersUrl, {
@@ -542,6 +576,15 @@ function onDeleteWorkspace() {
   mapRef.value.deleteWorkspace()
 }
 
+function onNotEnoughPlace() {
+  infoTitle.value = "Ошибка"
+  if (typeof text === "undefined" || text === "" || text === null) {
+    infoMessage.value = "Площадь помещения не расчитана на добавление еще одного рабочего места"
+  } else {
+    infoMessage.value = text;
+  }
+  openInfoModal()
+}
 
 </script>
 
@@ -614,7 +657,8 @@ function onDeleteWorkspace() {
       </div>
       <div class="input-field">
         <label>Сотрудник</label>
-        <SearchSelect ref="userSelectRef" :options="usersSearchMap" @return-id="onUserSelected"/>
+        <SearchSelect ref="userSelectRef" :options="usersSearchMap" @return-id="onUserSelected"
+                      :default-value="{id: -1, name: 'Не выбрано'}"/>
       </div>
       <button class="manage-btn" @click="addWorkspace">Создать</button>
       <button class="manage-btn" @click="onDeleteWorkspace">Удалить</button>
@@ -629,6 +673,7 @@ function onDeleteWorkspace() {
             @deselect-all="onDeselectAll"
             @return-rooms="saveMap"
             @no-room-selected="onNoRoomSelected"
+            @not-enough-place="onNotEnoughPlace"
       />
     </div>
   </div>

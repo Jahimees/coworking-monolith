@@ -3,7 +3,7 @@ import {onMounted, ref, watch} from 'vue';
 import interact from 'interactjs';
 import Utils from "@/scripts/Utils.js";
 
-const scale = 20; // Коэффициент масштабирования
+const scale = 27; // Коэффициент масштабирования
 const rooms = ref([]); // Список помещений
 const selectedRoom = ref(null); // Выбранное помещение
 const selectedWorkspace = ref(null); // Выбранное рабочее место
@@ -21,7 +21,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits(["updateRooms", "roomSelected", "workspaceSelected", "deselectAll", "returnRooms",
-  "noRoomSelected"]);
+  "noRoomSelected", "notEnoughPlace"]);
 
 // Добавление нового помещения
 function addRoom() {
@@ -47,21 +47,32 @@ function getRooms() {
 
 // Добавление рабочего места
 const addWorkspace = () => {
-  console.log(props.workspaceInputs)
-  if (selectedRoom.value != null && typeof selectedRoom.value !== "undefined") {
-    const newWorkspace = {
-      id: Date.now(),
-      name: props.workspaceInputs.name,
-      user: props.workspaceInputs.user,
-      x: scale,
-      y: scale,
-      roomId: selectedRoom.value.id
-    };
-    selectedRoom.value.workspaces.push(newWorkspace);
-    initializeWorkspaceDrag(selectedRoom.value, newWorkspace);
-  } else {
+  if (selectedRoom.value == null || typeof selectedRoom.value === "undefined") {
     emits("noRoomSelected")
+  return
   }
+
+  let length = selectedRoom.value.length
+  let width = selectedRoom.value.width;
+  let square = length * width;
+
+  let workspaceSquareRequired = (selectedRoom.value.workspaces.length + 1) * 4.5;
+
+  if (square < workspaceSquareRequired) {
+    emits("notEnoughPlace")
+    return;
+  }
+
+  const newWorkspace = {
+    id: Date.now(),
+    name: props.workspaceInputs.name,
+    user: props.workspaceInputs.user,
+    x: scale,
+    y: scale,
+    roomId: selectedRoom.value.id
+  };
+  selectedRoom.value.workspaces.push(newWorkspace);
+  initializeWorkspaceDrag(selectedRoom.value, newWorkspace);
 };
 
 // Удаление выбранного рабочего места
@@ -167,7 +178,6 @@ const initializeWorkspaceDrag = (room, workspace) => {
 
 // Рендеринг из JSON
 const renderFromJSON = (json) => {
-  console.log("PARARSARAS")
   if (typeof props.mapData != "undefined") {
     const data = JSON.parse(props.mapData);
     if (Array.isArray(data.rooms)) {
@@ -193,7 +203,6 @@ const renderFromJSON = (json) => {
 };
 
 watch(() => props.mapData, () => {
-  console.log(props.mapData)
   renderFromJSON(props.mapData);
 })
 
@@ -245,7 +254,7 @@ const deselectAll = () => {
       }"
         @click="selectRoom(room)"
     >
-      {{ room.name }}
+      {{ room.name }}. {{room.department?.name}}
 
       <!-- Рабочие места внутри комнаты -->
       <div
@@ -254,9 +263,10 @@ const deselectAll = () => {
           :id="'wp-' + wp.id"
           class="workspace"
           :style="{
-          width: '30px',
-          height: '30px',
-          backgroundColor: 'blue',
+            fontSize: '0.9em',
+          width: '35px',
+          height: '35px',
+          backgroundColor: wp.user ? '#fa2363' : '#5ec463',
           border: '1px solid',
           borderColor: wp === selectedWorkspace ? 'yellow' : 'black',
           position: 'absolute',
@@ -264,7 +274,7 @@ const deselectAll = () => {
         }"
           @click.stop="selectWorkspace(wp)"
       >
-        {{ wp.name }}
+        {{ wp.name }} <div style="color: white; text-align: center">{{wp.user?.lastName}} </div>
       </div>
     </div>
 

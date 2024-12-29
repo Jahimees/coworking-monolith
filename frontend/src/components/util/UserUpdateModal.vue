@@ -18,7 +18,7 @@ const inputNames = [
   "id", "name", "username", "email", "department", "roles", "workspace", "password"
 ]
 
-const url = "http://localhost:8080/api/v1/users?without_workspace=false"
+const url = "http://localhost:8080/api/v1/users"
 
 let isIdCorrect = ref(true)
 let isNameCorrect = ref(true)
@@ -303,12 +303,6 @@ function setDepartmentId(id) {
                   <SearchSelect :options="props.roleMap"
                                 :default-value="{id: props.data[6], name: props.data[7]}"
                                 @return-id="setRoleId "/>
-                </div>
-              </div>
-              <div>
-                <div>
-                  <label>Рабочее место</label>
-                  <!--                  <SearchSelect />-->
                 </div>
               </div>
               <div>

@@ -139,8 +139,8 @@ const deselectAll = () => {
         :style="{
         width: room.width * scale + 'px',
         height: room.length * scale + 'px',
-        backgroundColor: room.type.color,
-        borderWidth: 5 + 'px',
+        backgroundColor: room.type.name === 'Переговорная' ? '#aeaeff' : '#cccccc',
+        borderWidth:  room.type.name === 'Переговорная' ? 5 + 'px' : 0 + 'px',
         borderColor: room === selectedRoom ? 'yellow' : room.status.color,
         transform: `translate(${room.x}px, ${room.y}px)`,
       }"

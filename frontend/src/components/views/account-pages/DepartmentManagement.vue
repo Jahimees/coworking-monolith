@@ -95,9 +95,11 @@ function returnIdCallback(id) {
 }
 
 async function createDepartment() {
+  cannotCreateDepartment.value = false
   if (!validateFields()) {
     return
   }
+
 
   let json = {
     name: newDepartmentName.value,
@@ -105,8 +107,8 @@ async function createDepartment() {
       id: selectedUserId.value
     }
   }
-
   await fetch("http://localhost:8080/api/v1/departments", {
+
     method: "POST",
     body: JSON.stringify(json),
     headers: {
@@ -115,11 +117,20 @@ async function createDepartment() {
     crossDomain: true
   })
       .then(data => data.json())
-      .then(json => console.log(json))
-      .catch((err) => console.log(err))
+      .then(json => {
+            if (json.status === 500) {
+              cannotCreateDepartment.value = true
+            }
+          }
+      )
+      .catch(() => {
+        console.log("ASDFASDASDAS")
+      })
 
   reloadTable()
 }
+
+const cannotCreateDepartment = ref(false);
 
 function validateFields() {
   let newDepartment = newDepartmentName.value;
@@ -156,7 +167,7 @@ function onSuccessDepartmentUpdate() {
 
 function onFailDepartmentUpdate() {
   infoTitle.value = "Ошибка"
-  infoMessage.value = "Произошла ошибка сохранения"
+  infoMessage.value = "Этот пользователь уже является начальником отдела"
   openInfoModal()
 }
 
@@ -191,8 +202,11 @@ function closeInfoModal() {
       <div class="department-creation-box">
         <h3>Создать новый отдел</h3>
         <label>Начальник отдела</label>
+        <br>
+        <label class="err-label" v-if="cannotCreateDepartment">
+          Данный пользователь уже является начальником отдела
+        </label>
         <SearchSelect :options="usersMap" @return-id="returnIdCallback"/>
-        <div> {{ selectedUserId }}</div>
         <label>Название отдела</label>
         <br>
         <label class="err-label" v-if="!isDepartmentValid">

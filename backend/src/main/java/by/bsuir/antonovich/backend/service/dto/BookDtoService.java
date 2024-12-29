@@ -22,6 +22,10 @@ public class BookDtoService {
     private final BookService bookService;
     private final RoomService roomService;
 
+    public List<BookDto> findAll() {
+        return bookService.findAll().stream().map(book -> BookDtoConverter.convertToDto(book, Direction.DOWN)).toList();
+    }
+
     public BookDto create(BookDto bookDto) {
 
         Book book = BookDtoConverter.convertToEntity(bookDto, Direction.DOWN);

@@ -50,6 +50,9 @@ public class Room implements SimpleEntity {
     @JoinColumn(name = "floor_id")
     private Floor floor;
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Book> books;
+
     public Room(final String id) {
         this.id = id;
     }

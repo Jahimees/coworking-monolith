@@ -3,7 +3,6 @@ package by.bsuir.antonovich.backend.controller.rest;
 import by.bsuir.antonovich.backend.data.dto.FloorDto;
 import by.bsuir.antonovich.backend.service.dto.FloorDtoService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

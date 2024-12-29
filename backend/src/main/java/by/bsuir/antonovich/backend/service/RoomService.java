@@ -1,9 +1,7 @@
 package by.bsuir.antonovich.backend.service;
 
-import by.bsuir.antonovich.backend.data.Floor;
-import by.bsuir.antonovich.backend.data.Room;
-import by.bsuir.antonovich.backend.data.RoomStatus;
-import by.bsuir.antonovich.backend.data.RoomType;
+import by.bsuir.antonovich.backend.data.*;
+import by.bsuir.antonovich.backend.repository.BookRepository;
 import by.bsuir.antonovich.backend.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

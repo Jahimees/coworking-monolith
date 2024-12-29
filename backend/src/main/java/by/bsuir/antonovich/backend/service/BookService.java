@@ -20,6 +20,10 @@ public class BookService {
     private final RoomService roomService;
     private final UserService userService;
 
+    public List<Book> findAll() {
+        return bookRepository.findAll();
+    }
+
     public Book create(Book newBook) {
 
         return bookRepository.save(newBook);

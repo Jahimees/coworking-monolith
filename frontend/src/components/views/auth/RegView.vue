@@ -21,7 +21,10 @@ function register() {
   const userDto = {
     username: username.value,
     password: password.value,
-    email: email.value
+    email: email.value,
+    roles: [{
+      id: 2
+    }]
   }
 
   fetch("http://localhost:8080/api/v1/reg",

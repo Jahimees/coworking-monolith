@@ -95,15 +95,15 @@ function closeModal() {
 <template>
 
   <div class="inline-block w-100">
-    <div id="menu-bar" v-if="parsedToken.roles[0] === 'ROLE_MANAGER' || parsedToken.roles[0] === 'ROLE_USER'">
+    <div id="menu-bar">
       <div style="margin-bottom: 1.7em"><img src="@/assets/images/nauchsoft_logo.png" class="block-center"></div>
       <a href="/" class="menu-btn">На главную</a>
       <a href="#" id="settings" class="menu-btn" :class="{select: isSettings}">Настройки</a>
-      <a href="#" id="peopleManagement" class="menu-btn">Управление сотрудниками</a>
-      <a href="#" id="departmentManagement" class="menu-btn">Управление отделами</a>
-      <a href="#" id="officeManagement" class="menu-btn">Управление офисами</a>
+      <a href="#" id="peopleManagement" class="menu-btn" v-if="parsedToken.roles[0] === 'ROLE_MANAGER'">Управление сотрудниками</a>
+      <a href="#" id="departmentManagement" class="menu-btn" v-if="parsedToken.roles[0] === 'ROLE_MANAGER'">Управление отделами</a>
+      <a href="#" id="officeManagement" class="menu-btn" v-if="parsedToken.roles[0] === 'ROLE_MANAGER'">Управление офисами</a>
       <a href="#" id="roomBooking" class="menu-btn">Бронирование переговорных</a>
-      <a href="#" id="analytics" class="menu-btn">Аналитика бронирования</a>
+      <a href="#" id="analytics" class="menu-btn" v-if="parsedToken.roles[0] === 'ROLE_MANAGER'">Аналитика бронирования</a>
       <a href="#" id="myBooks" class="menu-btn">Мои брони</a>
       <a href="" @click="Utils.logout()" class="menu-btn">Выйти из аккаунта</a>
     </div>

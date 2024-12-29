@@ -103,7 +103,7 @@ function getBody() {
   <div class="view-header">
     Настройки
   </div>
-  {{ props.parsedToken }}
+<!--  {{ props.parsedToken }}-->
 
   <div style="margin: 0 auto; width: min-content">
 
@@ -143,75 +143,74 @@ function getBody() {
           <input id="middlename-input" v-model="middleNameValue">
         </div>
       </div>
-      <div class="setting-block col">
-        <div class="setting-title">Информация</div>
-        <div>
-          <label>Имя</label>
-          <input id="firstname-input" v-model="firstNameValue">
-        </div>
-        <div>
-          <label>Фамилия</label>
-          <input id="lastname-input" v-model="lastNameValue">
-        </div>
-        <div>
-          <label>Отчество</label>
-          <input id="middlename-input" v-model="middleNameValue">
-        </div>
-      </div>
+<!--      <div class="setting-block col">-->
+<!--        <div class="setting-title">Информация</div>-->
+<!--        <div>-->
+<!--          <label>Имя</label>-->
+<!--          <input id="firstname-input" v-model="firstNameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Фамилия</label>-->
+<!--          <input id="lastname-input" v-model="lastNameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Отчество</label>-->
+<!--          <input id="middlename-input" v-model="middleNameValue">-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
-    <div style="display: block"></div>
-    <div class="row" style="flex-wrap: nowrap">
-      <div class="setting-block col">
-        <div class="setting-title">Главные настройки</div>
-        <div>
-          <label>Имя пользователя</label>
-          <div class="err-field" v-if="isUsernameEmpty">Имя пользователя не может быть пустым</div>
-          <input id="username-input" v-model="usernameValue">
-        </div>
-        <div>
-          <label>Электронная почта</label>
-          <div class="err-field" v-if="isEmailEmpty">Электронная почта не может быть пустой</div>
-          <input id="email-input" v-model="emailValue">
-        </div>
-        <div>
-          <label>Пароль</label>
-          <input id="password-input" v-model="rawPasswordValue">
-        </div>
-        <div>
+<!--    <div class="row" style="flex-wrap: nowrap">-->
+<!--      <div class="setting-block col">-->
+<!--        <div class="setting-title">Главные настройки</div>-->
+<!--        <div>-->
+<!--          <label>Имя пользователя</label>-->
+<!--          <div class="err-field" v-if="isUsernameEmpty">Имя пользователя не может быть пустым</div>-->
+<!--          <input id="username-input" v-model="usernameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Электронная почта</label>-->
+<!--          <div class="err-field" v-if="isEmailEmpty">Электронная почта не может быть пустой</div>-->
+<!--          <input id="email-input" v-model="emailValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Пароль</label>-->
+<!--          <input id="password-input" v-model="rawPasswordValue">-->
+<!--        </div>-->
+<!--        <div>-->
 
-        </div>
-      </div>
-      <div class="setting-block col">
-        <div class="setting-title">Информация</div>
-        <div>
-          <label>Имя</label>
-          <input id="firstname-input" v-model="firstNameValue">
-        </div>
-        <div>
-          <label>Фамилия</label>
-          <input id="lastname-input" v-model="lastNameValue">
-        </div>
-        <div>
-          <label>Отчество</label>
-          <input id="middlename-input" v-model="middleNameValue">
-        </div>
-      </div>
-      <div class="setting-block col">
-        <div class="setting-title">Информация</div>
-        <div>
-          <label>Имя</label>
-          <input id="firstname-input" v-model="firstNameValue">
-        </div>
-        <div>
-          <label>Фамилия</label>
-          <input id="lastname-input" v-model="lastNameValue">
-        </div>
-        <div>
-          <label>Отчество</label>
-          <input id="middlename-input" v-model="middleNameValue">
-        </div>
-      </div>
-    </div>
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="setting-block col">-->
+<!--        <div class="setting-title">Информация</div>-->
+<!--        <div>-->
+<!--          <label>Имя</label>-->
+<!--          <input id="firstname-input" v-model="firstNameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Фамилия</label>-->
+<!--          <input id="lastname-input" v-model="lastNameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Отчество</label>-->
+<!--          <input id="middlename-input" v-model="middleNameValue">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="setting-block col">-->
+<!--        <div class="setting-title">Информация</div>-->
+<!--        <div>-->
+<!--          <label>Имя</label>-->
+<!--          <input id="firstname-input" v-model="firstNameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Фамилия</label>-->
+<!--          <input id="lastname-input" v-model="lastNameValue">-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <label>Отчество</label>-->
+<!--          <input id="middlename-input" v-model="middleNameValue">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
   <div class="btn-container">
 

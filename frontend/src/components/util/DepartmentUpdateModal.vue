@@ -70,8 +70,12 @@ function updateDepartment() {
   })
       .then(data => data.json())
       .then(json => {
-            $emit('success')
-            $emit('reloadTable')
+            if (json.status === 500) {
+              $emit('fail')
+            } else {
+              $emit('success')
+              $emit('reloadTable')
+            }
           }
       )
       .catch((err) => {
@@ -171,9 +175,8 @@ function returnIdCallback(id) {
               <div>
                 <div>
                   <label>{{ labels.USER_FULLNAME }}</label>
-
                   <SearchSelect :options="props.usersMap" @return-id="returnIdCallback"
-                                :default-value="{id: props.data[1], name: props.data[2]}"/>
+                                :default-value="{id: props.data[2], name: props.data[3]}"/>
                 </div>
               </div>
               <div>
