@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WorkSpaceRepository extends JpaRepository<WorkSpace, Integer> {
+public interface WorkSpaceRepository extends JpaRepository<WorkSpace, String> {
 
     List<WorkSpace> findAllByUserNotNull();
 }
