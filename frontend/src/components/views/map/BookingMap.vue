@@ -4,7 +4,7 @@ import interact from "interactjs";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
-const scale = 20; // Коэффициент масштабирования
+const scale = 27; // Коэффициент масштабирования
 const rooms = ref([]); // Список помещений
 const selectedRoom = ref(null); // Выбранное помещение
 const selectedWorkspace = ref(null); // Выбранное рабочее место

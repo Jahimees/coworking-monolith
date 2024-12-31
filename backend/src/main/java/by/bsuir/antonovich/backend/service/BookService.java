@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class BookService {
         Optional<Room> roomOptional = roomService.findById(roomId);
 
         if (roomOptional.isEmpty()) {
-            throw new IllegalArgumentException("Room not found");
+            return Collections.emptyList();
         }
 
         List<Book> bookList = bookRepository.findAllByRoom(roomOptional.get());
