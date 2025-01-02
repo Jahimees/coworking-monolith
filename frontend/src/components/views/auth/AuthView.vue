@@ -83,14 +83,12 @@ function test() {
       <button @click="authorize">Авторизоваться</button>
     </div>
     <hr>
-    <div class="block-center" style="color: white">Еще нет аккаунта?
-      <a style="color: white" href="/reg">
-        <b>Зарегистрироваться</b>
-      </a>
-    </div>
+<!--    <div class="block-center" style="color: white">Еще нет аккаунта?-->
+<!--      <a style="color: white" href="/reg">-->
+<!--        <b>Зарегистрироваться</b>-->
+<!--      </a>-->
+<!--    </div>-->
   </div>
-
-  <button @click="test">тест</button>
 </template>
 
 <style scoped>

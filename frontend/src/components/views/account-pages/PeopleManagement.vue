@@ -195,8 +195,8 @@ function loadWorkspaces() {
       </thead>
       <tbody></tbody>
     </table>
-    <button @click="openCreateUserModal">Создать пользователя</button>
   </div>
+  <button style="margin: 1em 0 0 2.5em" @click="openCreateUserModal">Создать пользователя</button>
 
   <UserUpdateModal v-show="isEditUserModalVisible"
                    :data="clickedRowData"

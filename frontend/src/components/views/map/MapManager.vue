@@ -59,6 +59,7 @@ const addWorkspace = () => {
   let workspaceSquareRequired = (selectedRoom.value.workspaces.length + 1) * 4.5;
 
   if (square < workspaceSquareRequired) {
+    deselectAll()
     emits("notEnoughPlace")
     return;
   }
@@ -77,7 +78,12 @@ const addWorkspace = () => {
 
 // Удаление выбранного рабочего места
 const deleteWorkspace = () => {
+  console.log("selectedRoom.value")
+  console.log(selectedRoom.value)
+  console.log("selectedWorkspace.value")
+  console.log(selectedWorkspace.value)
   if (selectedRoom.value && selectedWorkspace.value) {
+    console.log("УДАЛЕНГИЕ РАБАОА 2")
     selectedRoom.value.workspaces = selectedRoom.value.workspaces.filter(
         (wp) => wp.id !== selectedWorkspace.value.id
     );
@@ -217,14 +223,15 @@ const selectRoom = (room) => {
 }
 
 const selectWorkspace = (workspace) => {
-  selectedWorkspace.value = workspace
+
   if (workspace != null) {
     rooms.value.forEach(room => {
-      if (room.id === workspace.roomId) {
+      if (room.id === workspace.room.id) {
         selectRoom(room)
       }
     })
   }
+  selectedWorkspace.value = workspace
   emits("workspaceSelected", workspace)
 }
 

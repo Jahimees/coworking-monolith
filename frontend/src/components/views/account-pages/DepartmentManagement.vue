@@ -40,13 +40,16 @@ async function loadUsers() {
 }
 
 async function initDataTable() {
-  console.log("INIT")
   await fetch("http://localhost:8080/api/v1/departments")
       .then(data => data.json())
       .then(json => {
         departments = json
       })
-
+  if (!DataTable.isDataTable('#departments')) {
+    let $dataTable = new DataTable('#departments_table');
+    $dataTable.data().clear();
+    $dataTable.destroy();
+  }
   DataTableUtils.initDataTable("departments", columnDefs)
 
   const $dataTable = fillTable(departments)

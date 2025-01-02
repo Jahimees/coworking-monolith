@@ -122,7 +122,7 @@ function getBody() {
         </div>
         <div>
           <label>Пароль</label>
-          <input id="password-input" v-model="rawPasswordValue">
+          <input id="password-input" type="password" v-model="rawPasswordValue">
         </div>
         <div>
 
